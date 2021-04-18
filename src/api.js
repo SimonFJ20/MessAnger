@@ -21,9 +21,9 @@ const api = async () => {
         specialTokens: database.collection('specialTokens')
     }
 
-    users(router, db);
-    rooms(router, db);
-    messages(router, db);
+    users(router, db, '/users');
+    rooms(router, db, '/rooms');
+    messages(router, db, '/messages');
 
 }
 
