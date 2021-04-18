@@ -1,6 +1,8 @@
 const express = require('express');
 const mongodb = require('mongodb');
-const bcrypt = require('bcrypt');
+const users = require('./api/users');
+const rooms = require('./api/rooms');
+const messages = require('./api/messages');
 const router = express.Router();
 
 const api = async () => {
@@ -9,13 +11,19 @@ const api = async () => {
     const client = new mongodb.MongoClient(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
     await client.connect();
     console.log('Connected to MongoDB Cloud');
-    const database = client.db('swiftAppMessenger');
+    const database = client.db('MessAnger');
 
-    const Rooms = database.collection('rooms');
-    const Messages = database.collection('messages');
-    const Users = database.collection('users');
+    const db = {
+        users: database.collection('users'),
+        rooms: database.collection('rooms'),
+        messages: database.collection('messages'),
+        tokens: database.collection('tokens'),
+        specialTokens: database.collection('specialTokens')
+    }
 
-
+    users(router, db);
+    rooms(router, db);
+    messages(router, db);
 
 }
 
