@@ -15,7 +15,7 @@ server.use(express.urlencoded({extended: true}));
 
 server.use('/api', api);
 
-server.use(express.static(path.join(__dirname, './public')));
+server.use(express.static(path.join(__dirname, '../public')));
 
 server.listen(port, () => {
     console.log('Express HTTP on port', port);

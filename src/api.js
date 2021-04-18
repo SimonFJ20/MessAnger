@@ -60,11 +60,17 @@ const api = async () => {
     router.post(prefix + '/create', async (req, res) => {
         try {
             const room = {
-                token: req.body.token,
                 name: req.body.name,
                 description: req.body.description ? req.body.description : '',
                 status: req.body.status,
                 password: req.body.password ? req.body.password : ''
+            }
+            
+            const token = req.body.token;
+            const existingToken = await db.tokens.findOne({token: token});
+            if(!existingToken) {
+                res.status(400).json({success: false, response: 'unknown'});
+                return;
             }
 
             res.status(200).json({
