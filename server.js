@@ -7,7 +7,7 @@ const api = require('./api');
 
 const server = express();
 
-const port = 80;
+const port = parseInt(process.env.HTTP_PORT);
 
 server.use(cors());
 server.use(express.json());

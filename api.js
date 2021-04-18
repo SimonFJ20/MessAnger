@@ -1,8 +1,8 @@
 const express = require('express');
 const mongodb = require('mongodb');
-const users = require('./api/users');
-const rooms = require('./api/rooms');
-const messages = require('./api/messages');
+//const users = require('./api/users');
+//const rooms = require('./api/rooms');
+//const messages = require('./api/messages');
 const router = express.Router();
 
 const bcrypt = require('bcrypt');
@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 const api = async () => {
 
     const mongoURI = process.env.MONGODB;
+    console.log('mongoURI:', typeof mongoURI);
     const client = new mongodb.MongoClient(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
     await client.connect();
     console.log('Connected to MongoDB Cloud');
@@ -23,9 +24,9 @@ const api = async () => {
         specialTokens: database.collection('specialTokens')
     }
 
-    users(router, db, '/users');
-    rooms(router, db, '/rooms');
-    messages(router, db, '/messages');
+    //users(router, db, '/users');
+    //rooms(router, db, '/rooms');
+    //messages(router, db, '/messages');
 
     // dev area
 
