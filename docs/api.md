@@ -354,7 +354,7 @@ Create new room
 ```typescript
 {
     success: boolean, 
-    response: 'success' | 'name taken' | 'no password' | 'error',
+    response: 'success' | 'name taken' | 'no password' | 'unknown' | 'error',
     roomId: string
 }
 ```
