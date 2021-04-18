@@ -380,7 +380,7 @@ Join a room, specify password if private, else leave empty
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'denied' | 'error'
+    response: 'success' | 'unknown token' | 'unknown room' | 'denied' | 'error'
 }
 ```
 
