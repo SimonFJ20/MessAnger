@@ -100,7 +100,7 @@ Register new user
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'username taken' | 'email taken' | 'error'
+    response: 'success' | 'username taken' | 'email taken' | 'email invalid' | 'error'
 }
 ```
 
