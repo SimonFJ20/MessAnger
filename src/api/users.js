@@ -20,13 +20,12 @@ const users = (router, db, prefix) => {
                 return;
             }
 
-            const token = {
+            const insert = await db.tokens.insertOne({
                 token: generateId(32),
                 user: user._id,
                 createdAt: Date()
-            }
-
-            const insert = await db.tokens.insertOne(token);
+            });
+            
             res.status(200).json({
                 success: true, 
                 response: 'success', 
@@ -116,7 +115,16 @@ const users = (router, db, prefix) => {
                 return;
             }
 
-            const insert = await db.users.insertOne(user);
+            const insert = await db.users.insertOne({
+                username: user.username,
+                password: user.password,
+                email: user.password,
+                bio: user.bio,
+                joinedRooms: [],
+                createdRooms: [],
+                lastOnline: Date(),
+                createdAt: Date()
+            });
             res.status(200).json({success: true, response: 'success', userId: insert.ops[0]._id});
         } catch(e) {
             res.status(500).json({success: false, response: 'error'});

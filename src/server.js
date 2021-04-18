@@ -4,9 +4,7 @@ const path = require('path');
 require('dotenv').config();
 const api = require('./api');
 
-
 const server = express();
-
 const port = parseInt(process.env.HTTP_PORT);
 
 server.use(cors());
