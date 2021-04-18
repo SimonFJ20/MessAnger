@@ -1,6 +1,7 @@
 const express = require('express');
 const mongodb = require('mongodb');
-//const users = require('./api/users');
+const { validateEmail, generateId } = require('./utils');
+const users = require('./api/users');
 //const rooms = require('./api/rooms');
 //const messages = require('./api/messages');
 const router = express.Router();
@@ -24,58 +25,60 @@ const api = async () => {
         specialTokens: database.collection('specialTokens')
     }
 
-    //users(router, db, '/users');
+    users(router, db, '/users');
     //rooms(router, db, '/rooms');
     //messages(router, db, '/messages');
 
     // dev area
 
-    let prefix = '/users';
+    let prefix = '/rooms';
 
-    router.post(prefix + '/login', async (req, res) => {
-
-    });
-
-    router.post(prefix + '/logout', async (req, res) => {
+    router.get(prefix + '/getall', async (req, res) => {
 
     });
 
-    router.post(prefix + '/checktoken', async (req, res) => {
+    router.get(prefix + '/get', async (req, res) => {
 
     });
 
-    router.post('/users/register', async (req, res) => {
-        console.log('fdsfdsf')
+    router.get(prefix + '/search', async (req, res) => {
+
+    });
+
+    router.get(prefix + '/getconstrained', async (req, res) => {
+
+    });
+
+    router.get(prefix + '/getuser', async (req, res) => {
+
+    });
+
+    router.get(prefix + '/getlist', async (req, res) => {
+
+    });
+
+    router.post(prefix + '/create', async (req, res) => {
         try {
-            const user = {
-                username: req.body.username,
-                password: await bcrypt.hash(req.body.password),
-                email: req.body.email,
-                bio: req.body.bio ? req.body.bio : ''
+            const room = {
+                token: req.body.token,
+                name: req.body.name,
+                description: req.body.description ? req.body.description : '',
+                status: req.body.status,
+                password: req.body.password ? req.body.password : ''
             }
 
-            const existingUsernameUser = await db.users.findOne({username: user.username});
-            if(existingUsernameUser) {
-                res.status(400).json({success: false, response: 'username taken'});
-                return;
-            }
-
-            const existingEmailUser = await db.users.findOne({email: user.email});
-            if(existingEmailUser) {
-                res.status(400).json({success: false, response: 'username taken'});
-                return;
-            }
-
-            const insert = await db.users.insertOne(user);
-            res.status(200).json({success: true, response: 'success', userId: insert.ops[0]._id});
+            res.status(200).json({
+                success: true, 
+                response: 'success'
+            });
         } catch(e) {
             res.status(500).json({success: false, response: 'error'});
-            console.error('Error on /api/users/register');
-            //console.error(e);
+            console.error('Error on /api/rooms/create');
+            console.error(e);
         }
     });
 
-    router.get(prefix + '/getdata', async (req, res) => {
+    router.post(prefix + '/join', async (req, res) => {
 
     });
 
