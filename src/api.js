@@ -11,7 +11,6 @@ const bcrypt = require('bcrypt');
 const api = async () => {
 
     const mongoURI = process.env.MONGODB;
-    console.log('mongoURI:', typeof mongoURI);
     const client = new mongodb.MongoClient(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
     await client.connect();
     console.log('Connected to MongoDB Cloud');
