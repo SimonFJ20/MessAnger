@@ -83,6 +83,7 @@ const api = async () => {
                 return;
             }
 
+            
             if(room.status !== 'public' && room.status !== 'hidden' && room.status !== 'private') {
                 res.status(400).json({success: false, response: 'error'});
                 return;
@@ -94,13 +95,13 @@ const api = async () => {
                 creator: token.user,
                 users: [token.user],
                 status: room.status,
-                password: room.password,
+                password: room.status === 'private' ? room.password : '',
                 messages: [],
                 createdAt: Date()
             });
 
             await db.users.updateOne({
-                _id: existingToken.user
+                _id: token.user
             }, {
                 $addToSet: {
                     createdRooms: insertedRoom.ops[0]._id,
