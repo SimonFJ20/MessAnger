@@ -343,9 +343,9 @@ Create new room
 {
     token: string, // auth token
     name: string,
-    description: string, // if not, leave empty
+    description: string,
     status: 'public' | 'hidden' | 'private',
-    password: string, // if not, leave empty
+    password: string,
 }
 ```
 
