@@ -1,4 +1,4 @@
-const express = require('express');
+const bcrypt = require('bcrypt');
 
 
 const users = (router, db, prefix) => {
@@ -17,7 +17,10 @@ const users = (router, db, prefix) => {
 
     router.post(prefix + '/register', async (req, res) => {
         try {
+            const user = {
+                username: req.body.username,
 
+            }
         } catch {
             res.json({success: false, response: 'error'})
         }
