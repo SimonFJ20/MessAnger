@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 const { validateEmail, generateId } = require('../utils');
 
@@ -50,7 +51,7 @@ const users = (router, db, prefix) => {
                 return;
             }
 
-            const deletedToken = await db.tokens.deleteOne({_id: existingToken._id});
+            const deletedToken = await db.tokens.deleteOne({_id: ObjectId(existingToken._id)});
 
             if(deletedToken.deletedCount !== 1) {
                 res.status(500).json({success: false, response: 'error'});
@@ -118,7 +119,7 @@ const users = (router, db, prefix) => {
             const insert = await db.users.insertOne({
                 username: user.username,
                 password: user.password,
-                email: user.password,
+                email: user.email,
                 bio: user.bio,
                 joinedRooms: [],
                 createdRooms: [],
@@ -145,7 +146,7 @@ const users = (router, db, prefix) => {
                 return;
             }
 
-            const user = await db.users.findOne({_id: existingToken.user});
+            const user = await db.users.findOne({_id: ObjectId(existingToken.user)});
 
             res.status(200).json({
                 success: true, 

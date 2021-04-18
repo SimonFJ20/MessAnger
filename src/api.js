@@ -1,5 +1,6 @@
 const express = require('express');
 const mongodb = require('mongodb');
+const { ObjectId } = require('mongodb');
 const { validateEmail, generateId } = require('./utils');
 const users = require('./api/users');
 //const rooms = require('./api/rooms');
@@ -100,7 +101,7 @@ const api = async () => {
             });
 
             await db.users.updateOne({
-                _id: token.user
+                _id: ObjectId(token.user)
             }, {
                 $addToSet: {
                     createdRooms: insertedRoom.ops[0]._id,
@@ -122,25 +123,33 @@ const api = async () => {
 
     router.post(prefix + '/join', async (req, res) => {
         try {
-            const token = await db.tokens.findOne({token: req.body.token});
+            const token = await db.tokens.findOne({token: ObjectId(req.body.token)});
             if(!token) {
                 res.status(400).json({success: false, response: 'unknown token'});
                 return;
             }
 
-            const room = await db.rooms.findOne({_id: req.body.roomId});
+            const room = await db.rooms.findOne({'_id': ObjectId(req.body.roomId)});
+            console.log(room)
             if(!room) {
                 res.status(400).json({success: false, response: 'unknown room'});
                 return;
             }
 
-            if(req.body.password !== room.password && room.password !== '') {
+            const password = req.body.password ? req.body.password : '';
+            if(password !== room.password && room.password && room.status === 'private') {
                 res.status(400).json({success: false, response: 'denied'});
                 return;
             }
 
+            const user = await db.users.findOne({_id: ObjectId(token.user)});
+            if(user.joinedRooms.find(e => e === room._id)) {
+                res.status(400).json({success: false, response: 'already joined'});
+                return;
+            }
+
             await db.rooms.updateOne({
-                _id: room._id
+                _id: ObjectId(room._id)
             }, {
                 $addToSet: {
                     users: token.user,
@@ -148,16 +157,17 @@ const api = async () => {
             });
 
             await db.users.updateOne({
-                _id: token.user
+                _id: ObjectId(token.user)
             }, {
                 $addToSet: {
                     joinedRooms: room._id,
                 }
             });
+            console.log(room._id);
 
             res.status(200).json({
                 success: true, 
-                response: 'success',
+                response: 'success'
             });
         } catch(e) {
             res.status(500).json({success: false, response: 'error'});
