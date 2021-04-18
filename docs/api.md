@@ -1,7 +1,7 @@
 
 # MessAnger API
 
-## api/users
+## Users
 
 User authentication
 
