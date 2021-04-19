@@ -13,8 +13,12 @@ const api = async () => {
 
     const mongoURI = process.env.MONGODB;
     const client = new mongodb.MongoClient(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
-    await client.connect();
-    console.log('Connected to MongoDB Cloud');
+    try {
+        await client.connect();
+        console.log('Connected to MongoDB Cloud');
+    } catch(e) {
+        console.error(e);
+    }
     const database = client.db('MessAnger');
 
     const db = {
@@ -46,7 +50,38 @@ const api = async () => {
     });
 
     router.get(prefix + '/getconstrained', async (req, res) => {
+        try {
+            const request = {
+                sortBy: req.body.sortBy,
+                sortType: req.body.sortType,
+                amount: req.body.amount,
+                name: req.body.name ? req.body.name : null,
+                description: req.body.description ? req.body.description : null,
+                creator: req.body.creator ? req.body.creator : null,
+                userCount: req.body.userCount ? req.body.userCount : null,
+                messageCount: req.body.messageCount ? req.body.messageCount : null,
+                createdBefore: req.body.createdBefore ? req.body.createdBefore : null,
+                createdAfter: req.body.createdAfter ? req.body.createdAfter : null
+            }
+            
+            const query = {
+                sortBy: request.sortBy,
+                sortType: request.sortType,
+                amount
+            };
 
+            const cursor = await db.rooms.find({users: {$in: [token.user]}}, {projection: {_id: 1}});
+            
+            console.log(await cursor.count());
+            const rooms = [];
+            await cursor.forEach(room => {rooms.push(room._id)});
+
+            res.status(200).json(rooms);
+        } catch(e) {
+            res.status(500).json({success: false, response: 'error'});
+            console.error('Error on /api/rooms/getconstrained');
+            console.error(e);
+        }
     });
 
     // TODO fix, low priority
