@@ -290,7 +290,7 @@ Get all rooms relating to user
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'denied' | 'no result' | 'error',
+    response: 'success' | 'unknown' | 'denied' | 'no result' | 'error',
     rooms: string[], // roomId
 }
 ```

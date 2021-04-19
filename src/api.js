@@ -49,12 +49,57 @@ const api = async () => {
 
     });
 
+    // TODO fix, low priority
     router.get(prefix + '/getuser', async (req, res) => {
+        try {
+            const token = await db.tokens.findOne({token: req.body.token});
+            if(!token) {
+                res.status(400).json({success: false, response: 'unknown'});
+                return;
+            }
 
+            const cursor = await db.rooms.find({users: {$in: [token.user]}}, {projection: {_id: 1}});
+            
+            console.log(await cursor.count());
+            const rooms = [];
+            await cursor.forEach(room => {rooms.push(room._id)});
+
+            res.status(200).json(rooms);
+        } catch(e) {
+            res.status(500).json({success: false, response: 'error'});
+            console.error('Error on /api/rooms/getuser');
+            console.error(e);
+        }
     });
 
     router.get(prefix + '/getlist', async (req, res) => {
+        try {
+            
+            const roomIds = req.body.rooms;
+            const token = req.body.token ? req.body.token : '';
+            const specialToken = req.body.specialToken ? req.body.specialTokens : '';
 
+            let rooms = [];
+            for(let i in roomIds) {
+                const room = await db.rooms.findOne({_id: ObjectId(roomIds[i])});
+                if(room.status === 'private') {
+                    if(token !== '') {
+                        const dbToken = await db.tokens.findOne({token: token});
+                        if(dbToken.user !== room.creator) continue;
+                    } else if(specialToken !== '') {
+                        const dbSpecialToken = await db.specialTokens.findOne({token: token});
+                        if(!dbSpecialToken) continue;
+                    } else continue;
+                }
+                rooms.push(room);
+            }
+
+            res.status(200).json(rooms);
+        } catch(e) {
+            res.status(500).json({success: false, response: 'error'});
+            console.error('Error on /api/rooms/getlist');
+            console.error(e);
+        }
     });
 
     router.post(prefix + '/create', async (req, res) => {
@@ -123,14 +168,13 @@ const api = async () => {
 
     router.post(prefix + '/join', async (req, res) => {
         try {
-            const token = await db.tokens.findOne({token: ObjectId(req.body.token)});
+            const token = await db.tokens.findOne({token: req.body.token});
             if(!token) {
                 res.status(400).json({success: false, response: 'unknown token'});
                 return;
             }
 
             const room = await db.rooms.findOne({'_id': ObjectId(req.body.roomId)});
-            console.log(room)
             if(!room) {
                 res.status(400).json({success: false, response: 'unknown room'});
                 return;
@@ -143,9 +187,11 @@ const api = async () => {
             }
 
             const user = await db.users.findOne({_id: ObjectId(token.user)});
-            if(user.joinedRooms.find(e => e === room._id)) {
-                res.status(400).json({success: false, response: 'already joined'});
-                return;
+            for(let i in user.joinedRooms) {
+                if(user.joinedRooms[i].toString() === room._id.toString()) {
+                    res.status(400).json({success: false, response: 'already joined'});
+                    return;
+                }
             }
 
             await db.rooms.updateOne({
@@ -163,7 +209,6 @@ const api = async () => {
                     joinedRooms: room._id,
                 }
             });
-            console.log(room._id);
 
             res.status(200).json({
                 success: true, 
