@@ -25,7 +25,7 @@ Login in a user.
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'error';
+    response: 'success' | 'unknown' | 'incomplete' | 'error';
     username?: string,
     userId?: string,
     token?: string
@@ -51,7 +51,7 @@ Logout a token/user
 ```typescript
 {
     success: boolean
-    response: 'success' | 'unknown' | 'error'
+    response: 'success' | 'unknown' | 'incomplete' | 'error'
 }
 ```
 
@@ -74,7 +74,7 @@ Check if token still valid
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'expired' | 'unknown' | 'error'
+    response: 'success' | 'expired' | 'unknown' | 'incomplete' | 'error'
 }
 ```
 
@@ -100,7 +100,7 @@ Register new user
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'username taken' | 'email taken' | 'email invalid' | 'error'
+    response: 'success' | 'username taken' | 'email taken' | 'email invalid' | 'incomplete' | 'error'
 }
 ```
 
@@ -123,7 +123,7 @@ Get all data relating to user. GPDR Compliance
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'error',
+    response: 'success' | 'unknown' | 'incomplete' | 'error',
     userId: string,
     username: string,
     email: string,
@@ -163,7 +163,7 @@ With special token: retrieve a list of all rooms, with specified types.
 [
     {
         success: boolean,
-        response: 'success' | 'denied' | 'error',
+        response: 'success' | 'denied' | 'incomplete' | 'error',
         roomId: string,
         name: string,
         descript: string,
@@ -199,7 +199,7 @@ If private, specify password, or valid user token.
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'denied' | 'error',
+    response: 'success' | 'unknown' | 'denied' | 'incomplete' | 'error',
     roomId: string,
     name: string,
     description: string,
@@ -231,7 +231,7 @@ Get a list of public rooms, complying to search string.
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'no result' | 'error',
+    response: 'success' | 'no result' | 'incomplete' | 'error',
     rooms: string[], // roomId
 }
 ```
@@ -264,7 +264,7 @@ Get a list of all public rooms, complying with the spefied constrains.
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'no result' | 'error',
+    response: 'success' | 'no result' | 'incomplete' | 'error',
     rooms: string[], // roomId[]
 }
 ```
@@ -290,7 +290,7 @@ Get all rooms relating to user
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'denied' | 'no result' | 'error',
+    response: 'success' | 'unknown' | 'denied' | 'no result' | 'incomplete' | 'error',
     rooms: string[], // roomId
 }
 ```
@@ -354,7 +354,7 @@ Create new room
 ```typescript
 {
     success: boolean, 
-    response: 'success' | 'name taken' | 'no password' | 'unknown' | 'error',
+    response: 'success' | 'name taken' | 'no password' | 'unknown' | 'incomplete' | 'error',
     roomId: string
 }
 ```
@@ -380,7 +380,7 @@ Join a room, specify password if private, else leave empty
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'already joined' | 'unknown token' | 'unknown room' | 'denied' | 'error'
+    response: 'success' | 'already joined' | 'unknown token' | 'unknown room' | 'denied' | 'incomplete' | 'error'
 }
 ```
 
@@ -407,7 +407,7 @@ Get message data from a specified messageId
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'error',
+    response: 'success' | 'unknown' | 'incomplete' | 'error',
     messageId: string,
     roomId: string,
     message: string,
@@ -466,14 +466,7 @@ Post a message to a room
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'denied' | 'error',
+    response: 'success' | 'unknown' | 'denied' | 'incomplete' | 'error',
     messageId: string,
-}
-```
-
-
-```typescript
-{
-    
 }
 ```
