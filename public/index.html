@@ -9,21 +9,33 @@
     <link rel="shortcut icon" href="favicon.png" type="x-image/png">
 </head>
 <body>
-    <div id="popup" hidden>
-        <div class="form"></div>
-    </div>
     <div id="room-container">
-        <button>create room</button>
-        <input type="search" placeholder="search">
+        <button class="room" id="create-room">create room</button>
+        <input id="room-search" type="search" placeholder="search">
         <div id="room-list-container">
-            
+            <button class="room active">welcome</button>
+            <button class="room">test</button>
         </div>
+        <p id="display-username">username</p>
+        <button class="room" id="log-out">log out</button>
     </div>
     <div id="chat-container">
+        <h1 id="room-title">room title</h1>
         <div id="chat-list-container">
-
+            <div class="chat left">Hej, og velkommen til vores chat app.</div>
+            <div class="chat right">right chat test</div>
         </div>
-
+        <input id="chat-field" placeholder="message">
+    </div>
+    <div id="popup">
+        <div class="form">
+            <!-- content inside is decided by javascript presumably -->
+            <label for="login-username">username</label>
+            <input id="login-username" placeholder="...">
+            <label for="login-password">password</label>
+            <input id="login-password" placeholder="..." type="password">    
+            <button id="login-submit">Submit</button>
+        </div>
     </div>
 </body>
 </html>
