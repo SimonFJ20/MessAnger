@@ -164,7 +164,7 @@ With special token: retrieve a list of all rooms, with specified types.
 [
     {
         success: boolean,
-        response: 'success' | 'denied' | 'incomplete' | 'error',
+        response: 'success' | 'denied' | 'error',
         roomId: string,
         name: string,
         descript: string,
