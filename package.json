@@ -7,8 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "start": "node dist/server.js",
+    "dev": "nodemon dist/server.js",
+    "build": "tsc",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,10 @@
   },
   "homepage": "https://github.com/SimonFJ20/MessAnger#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.10",
+    "@types/express": "^4.17.11",
+    "@types/mongodb": "^3.6.12",
+    "@types/node": "^14.14.41",
     "nodemon": "^2.0.7"
   },
   "dependencies": {
