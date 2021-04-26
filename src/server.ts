@@ -3,13 +3,26 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
+import { Db, MongoClient } from 'mongodb';
 import { api } from './api';
 
-dotenv.config();
+const mongodbConnect = async () => {
+    try {
+        const mongoURI = <string>process.env.MONGODB;
+        const client = new MongoClient(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
+        await client.connect();
+        const database = client.db('MessAngerV2');
+        console.log('Connected to MongoDB Cloud');
+        return database;
+    } catch(error) {
+        console.error('Error connecting to MongoDB', error);
+    }
+}
 
-try {
+const server = async () => {
+    dotenv.config();
     
-    const portHTTP = <string>process.env.HTTP_PORT;
+    const portHTTP = parseInt(<string>process.env.HTTP_PORT);
     
     const server = express();
     
@@ -17,15 +30,16 @@ try {
     server.use(express.json());
     server.use(express.urlencoded({extended: true}));
     
-    server.use('/api', api);
+    server.use('/api', await api(<Db>await mongodbConnect()));
     server.use(express.static(path.join(__dirname, '../public')));
     
     server.listen(portHTTP, () => {
         console.log('MessAnger backend on port', portHTTP);
     });
-    
-} catch(error) {
-    
-    console.error('Failed to start server', error);
-    
 }
+
+
+
+
+try {server()}
+catch(error) {console.error('Failed to start server', error)}

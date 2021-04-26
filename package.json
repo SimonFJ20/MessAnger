@@ -2,7 +2,7 @@
   "name": "messanger",
   "version": "1.0.0",
   "description": "App for messages",
-  "main": "src/server.js",
+  "main": "dist/server.js",
   "directories": {
     "doc": "docs"
   },
