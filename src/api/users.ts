@@ -54,7 +54,7 @@ const setUsersLogin = (router: Router, database: Db, route: string) => {
 
 
 const setUsersLogout = (router: Router, database: Db, route: string) => {
-    router.post('/users/logout', async (req, res) => {
+    router.post(route, async (req, res) => {
         try {
             const Tokens = database.collection('tokens');
 
@@ -83,7 +83,7 @@ const setUsersLogout = (router: Router, database: Db, route: string) => {
             });
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/logout', error);
+            console.error('Error on route ' + route, error);
         }
     });
 }
@@ -91,7 +91,7 @@ const setUsersLogout = (router: Router, database: Db, route: string) => {
 
 
 const setUsersChecktoken = (router: Router, database: Db, route: string) => {
-    router.post('/users/checktoken', async (req, res) => {
+    router.post(route, async (req, res) => {
         try {
             const Tokens = database.collection('tokens');
 
@@ -114,14 +114,14 @@ const setUsersChecktoken = (router: Router, database: Db, route: string) => {
             });
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/checktoken', error);
+            console.error('Error on route ' + route, error);
         }
     });
 }
 
 
 const setUsersRegister = (router: Router, database: Db, route: string) => {
-    router.post('/users/register', async (req, res) => {
+    router.post(route, async (req, res) => {
         try {
             const Users = database.collection('users');
 
@@ -177,14 +177,14 @@ const setUsersRegister = (router: Router, database: Db, route: string) => {
             });
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/register', error);
+            console.error('Error on route ' + route, error);
         }
     });
 }
 
 
 const setUsersGetdata = (router: Router, database: Db, route: string) => {
-    router.get('/users/getdata', async (req, res) => {
+    router.get(route, async (req, res) => {
         try {
             const Users = database.collection('users');
             const Messages = database.collection('messages');
@@ -206,8 +206,8 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
             const user = await Users.findOne({_id: new ObjectId(existingToken.user)});
             
             const messages: string[] = [];
-            const messageCursor = await Messages.find({author: user._id}, {projection: {_id: 1}});
-            messageCursor.forEach(message => messages.push(message));
+            const messageCursor = Messages.find({author: user._id}, {projection: {_id: 1}});
+            await messageCursor.forEach(message => messages.push(message));
 
             res.status(200).json({
                 success: true, 
@@ -217,7 +217,7 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
             });
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/getdata', error);
+            console.error('Error on route ' + route, error);
         }
     });
 }
