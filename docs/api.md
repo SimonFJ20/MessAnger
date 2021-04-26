@@ -202,7 +202,7 @@ If private, specify password, or valid user token.
     response: 'success' | 'unknown' | 'denied' | 'error',
     roomId: string,
     name: string,
-    descript: string,
+    description: string,
     creator: string, // userId
     users: string[], // userId[] 
     status: 'public' | 'hidden' | 'private',
@@ -255,7 +255,7 @@ Get a list of all public rooms, complying with the spefied constrains.
     userCount?: number,
     messageCount?: number,
     createdBefore?: Date,
-    createdAfer?: Date
+    createdAfter?: Date
 }
 ```
 
