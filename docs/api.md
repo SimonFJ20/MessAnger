@@ -161,21 +161,23 @@ With special token: retrieve a list of all rooms, with specified types.
 #### Response
 
 ```typescript
-[
-    {
-        success: boolean,
-        response: 'success' | 'denied' | 'error',
-        roomId: string,
-        name: string,
-        descript: string,
-        creator: string, // userId
-        users: string[], // userId[] 
-        status: 'public' | 'hidden' | 'private',
-        messages: string[], // messageId[]
-        messageCount: number,
-        createdAt: Date
-    }
-]
+{
+    success: boolean,
+    response: 'success' | 'denied' | 'error',
+    rooms: [
+        {
+            roomId: string,
+            name: string,
+            descript: string,
+            creator: string, // userId
+            users: string[], // userId[] 
+            status: 'public' | 'hidden' | 'private',
+            messages: string[], // messageId[]
+            messageCount: number,
+            createdAt: Date
+        }
+    ]
+}
 ```
 
 ### GET /get
