@@ -1,45 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="dk">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <title>Chat</title>
+    <link rel="shortcut icon" href="favicon.png" type="x-image/png">
 </head>
 <body>
-    
-    <div id="desktop">
-
-        <div id="sidebar" >
-
-            <div id="searchBar">
-                <input type="text" id="searchBarInput" placeholder="search...">
-                <div id="seachResults">
-                    <div class="searchResult">This is a result</div>
-                </div>
-            </div>
+    <div id="popup" hidden>
+        <div class="form"></div>
+    </div>
+    <div id="room-container">
+        <button>create room</button>
+        <input type="search" placeholder="search">
+        <div id="room-list-container">
+            
+        </div>
+    </div>
+    <div id="chat-container">
+        <div id="chat-list-container">
 
         </div>
-
-        <div id="topbar" >
-            <h1 id="topbarTitle">Welcome to MessAnger</h1>
-        </div>
-
-        <div id="content" >
-
-        </div>
-
-        <div id="bottombar" >
-            <input type="text" id="messageInput" placeholder="send message...">
-            <button id="messageSend">send</button>
-        </div>
-
-        
 
     </div>
-
-    
-
 </body>
 </html>
