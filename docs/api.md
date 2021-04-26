@@ -225,7 +225,8 @@ Get a list of public rooms, complying to search string.
 
 ```typescript
 {
-    search: string
+    search: string,
+    amount?: number
 }
 ```
 
