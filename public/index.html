@@ -1,45 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="dk">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <title>Chat</title>
+    <link rel="shortcut icon" href="favicon.png" type="x-image/png">
 </head>
 <body>
-    
-    <div id="desktop">
-
-        <div id="sidebar" >
-
-            <div id="searchBar">
-                <input type="text" id="searchBarInput" placeholder="search...">
-                <div id="seachResults">
-                    <div class="searchResult">This is a result</div>
-                </div>
-            </div>
-
+    <div id="room-container">
+        <button class="room" id="create-room">create room</button>
+        <input id="room-search" type="search" placeholder="search">
+        <div id="room-list-container">
+            <button class="room active">welcome</button>
+            <button class="room">test</button>
         </div>
-
-        <div id="topbar" >
-            <h1 id="topbarTitle">Welcome to MessAnger</h1>
-        </div>
-
-        <div id="content" >
-
-        </div>
-
-        <div id="bottombar" >
-            <input type="text" id="messageInput" placeholder="send message...">
-            <button id="messageSend">send</button>
-        </div>
-
-        
-
+        <p id="display-username">username</p>
+        <button class="room" id="log-out">log out</button>
     </div>
-
-    
-
+    <div id="chat-container">
+        <h1 id="room-title">room title</h1>
+        <div id="chat-list-container">
+            <div class="chat left">Hej, og velkommen til vores chat app.</div>
+            <div class="chat right">right chat test</div>
+        </div>
+        <input id="chat-field" placeholder="message">
+    </div>
+    <div id="popup">
+        <div class="form">
+            <!-- content inside is decided by javascript presumably -->
+            <label for="login-username">username</label>
+            <input id="login-username" placeholder="...">
+            <label for="login-password">password</label>
+            <input id="login-password" placeholder="..." type="password">    
+            <button id="login-submit">Submit</button>
+        </div>
+    </div>
 </body>
 </html>
