@@ -1,64 +1,16 @@
 import { Router } from 'express';
 import { Db } from 'mongodb';
+import { exists } from './utils';
 
 
-
-export const api = async (mongodbConnection: Db) => {
+export const api = async (database: Db) => {
     const router = Router();
 
-    const Users = mongodbConnection.collection('users');
-    const Rooms = mongodbConnection.collection('rooms');
-    const Messages = mongodbConnection.collection('messages');
-    const Tokens = mongodbConnection.collection('tokens');
-    const SpecialTokens = mongodbConnection.collection('specialTokens');
-
-    router.post('/users/login', async (req, res) => {
-        try {
-            
-        } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/login', error);
-        }
-    });
-
-    router.post('/users/logout', async (req, res) => {
-        try {
-            
-        } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/logout', error);
-        }
-    });
-
-    router.post('/users/checktoken', async (req, res) => {
-        try {
-            
-        } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/checktoken', error);
-        }
-    });
-
-    router.post('/users/register', async (req, res) => {
-        try {
-            
-        } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/register', error);
-        }
-    });
-
-    router.get('/users/getdata', async (req, res) => {
-        try {
-            
-        } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
-            console.error('Error on route /users/getdata', error);
-        }
-    });
-
-
-
+    const Users = database.collection('users');
+    const Rooms = database.collection('rooms');
+    const Messages = database.collection('messages');
+    const Tokens = database.collection('tokens');
+    const SpecialTokens = database.collection('specialTokens');
 
 
     router.get('/rooms/getdata', async (req, res) => {
