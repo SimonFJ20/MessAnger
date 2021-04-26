@@ -6,7 +6,7 @@ import fs from 'fs';
 import { Db, MongoClient } from 'mongodb';
 import { api } from './api';
 
-const mongodbConnect = async () => {
+const connectToMongodb = async () => {
     try {
         const mongoURI = <string>process.env.MONGODB;
         const client = new MongoClient(mongoURI, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -30,7 +30,7 @@ const server = async () => {
     server.use(express.json());
     server.use(express.urlencoded({extended: true}));
     
-    server.use('/api', await api(<Db>await mongodbConnect()));
+    server.use('/api', await api(<Db>await connectToMongodb()));
     server.use(express.static(path.join(__dirname, '../public')));
     
     server.listen(portHTTP, () => {
@@ -41,5 +41,6 @@ const server = async () => {
 
 
 
-try {server()}
-catch(error) {console.error('Failed to start server', error)}
+server().catch((error) => {
+    console.error('Failed to start server', error);
+})
