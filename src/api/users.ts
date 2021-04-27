@@ -154,7 +154,7 @@ const setUsersRegister = (router: Router, database: Db, route: string) => {
             }
 
             const existingEmailUser = await Users.findOne({email: user.email});
-            if(existingUsernameUser) {
+            if(existingEmailUser) {
                 res.status(400).json({success: false, response: 'email taken'});
                 return;
             }
