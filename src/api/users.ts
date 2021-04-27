@@ -226,6 +226,17 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
     });
 }
 
+const clearUserTokens = async (database: Db) => {
+    const Tokens = database.collection('tokens');
+    const maxTime = 7200000;
+    const tokens = Tokens.find();
+    const expiredTokens: any[] = [];
+    await tokens.forEach((token) => {
+        const tokenDate = new Date(token.createdAt);
+        if(Date.now() - tokenDate.getMilliseconds() > maxTime) expiredTokens.push(new ObjectId(token._id));
+    });
+    const deletedTokens = await Tokens.deleteMany({_id: {$in: expiredTokens}});
+}
 
 export const setUsers = (router: Router, database: Db, route: string) => {
     setUsersLogin(router, database, route + '/login');
@@ -233,4 +244,6 @@ export const setUsers = (router: Router, database: Db, route: string) => {
     setUsersChecktoken(router, database, route + '/checktoken');
     setUsersRegister(router, database, route + '/register');
     setUsersGetdata(router, database, route + '/getdata');
+
+    setInterval(clearUserTokens, 60000, database);
 }
