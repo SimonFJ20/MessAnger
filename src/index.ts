@@ -1,4 +1,4 @@
 import { htmlElements } from "./htmlElements";
+import { displayForm } from "./popupHandler";
 
-
-htmlElements
+displayForm('login', 'login required')

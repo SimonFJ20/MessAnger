@@ -48,6 +48,8 @@ const formApiPath: { [key: string] : string} = {
 }
 
 export const displayForm = (name: string, message?: string) => {
+    htmlElements.popup.className = "";
+
     let inputObjects: { [key: string] : HTMLElement} = {}
 
     htmlElements.popupForm.innerHTML = message || '';
@@ -77,7 +79,8 @@ export const displayForm = (name: string, message?: string) => {
     submitButton.textContent = 'submit';
     htmlElements.popupForm.appendChild(submitButton)
 
-    submitButton.addEventListener('click', (ev: MouseEvent) => {
+    submitButton.addEventListener('click', () => {
+        console.log('clicked')
         let data: { [field: string]: any } = {};
         for (let field in inputObjects) {
             data[field] = inputObjects[name]
@@ -86,8 +89,12 @@ export const displayForm = (name: string, message?: string) => {
         post('url', data, (response: any) => {
             if (!response.success) {
                 console.error(response.response)
-
+                displayForm(name, response)
+                return
             }
+
+            htmlElements.popup.className = "hidden";
+
         })
-    })
+    }, {once: true}) // handles cleanup for me to prevent memory leaks.
 }
