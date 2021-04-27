@@ -1,6 +1,8 @@
-import { htmlElements } from "./htmlElements";
+import { htmlElements } from "./dom";
 import { displayForm } from "./popupHandler";
 import { hostname } from './ajax';
+import { useRoomHandler } from "./roomHandler";
+import { useUserHandler } from "./userHandler";
 
 export const formData: any = {
     login: {
@@ -24,7 +26,13 @@ export const formData: any = {
             htmlElements.popupForm.appendChild(button);    
         },
         completed: (response: any) => {
-            return sessionStorage.setItem('userToken', response.token)
+            sessionStorage.setItem('username', response.username);
+            sessionStorage.setItem('userId', response.userId);
+            sessionStorage.setItem('token', response.token);
+
+            useRoomHandler();
+            useUserHandler();
+            return true;
         }
     },
     register: {
@@ -35,7 +43,7 @@ export const formData: any = {
             },
             {
                 name: 'email',
-                type: 'mail'
+                type: 'email'
             },
             {
                 name: 'password',
@@ -60,13 +68,30 @@ export const formData: any = {
         objects: [
             {
                 name: 'name',
+                label: 'room name'
             },
             {
-                name: 'password',
+                name: 'description',
+            },
+            {
+                name: 'status',
+                label: 'type (public/hidden/private)'
+            },
+            {
+                name: 'password (leave blank if public)',
                 type: 'password',
             }
         ],
         api: hostname + '/api/rooms/create',
+        created: () => {
+            let button = <HTMLButtonElement>document.createElement('button');
+            button.textContent = 'cancel'
+            button.addEventListener('click', () => {
+                htmlElements.popupForm.innerHTML = '';
+                htmlElements.popup.className = 'hidden';
+            }, {once: true})
+            htmlElements.popupForm.appendChild(button);
+        }
     },
     joinRoom: {
         title: 'join room',
