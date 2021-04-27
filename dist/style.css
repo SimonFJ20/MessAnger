@@ -54,7 +54,7 @@ body {
 
 }
 
-#popup > .form {
+#popup > #popup-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -69,14 +69,13 @@ body {
     overflow-y: auto;
 
     min-width: 400px;
-
 }
 
-#popup > .form > * {
+#popup > #popup-form > * {
     margin: 1em;
 }
 
-#popup > .form input {
+#popup > #popup-form input {
     outline: none;
     background-color: transparent;
     color: var(--primary);
@@ -85,12 +84,12 @@ body {
     text-align: center;
     width: 50%;
 }
-#popup > .form button {
+#popup > #popup-form button {
     padding: 0.5em 1em;
     border: 1px solid var(--primary);
 }
 
-#popup > .form button:hover {
+#popup > #popup-form button:hover {
     background-color: var(--primary);
     color: var(--accent);
     cursor: pointer;
