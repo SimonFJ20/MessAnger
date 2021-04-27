@@ -10,7 +10,7 @@ const setUsersLogin = (router: Router, database: Db, route: string) => {
             const Tokens = database.collection('tokens');
             
             if(!exists(req.body.username, req.body.password)) {
-                res.status(400).json({success: false, status: 'incomplete'});
+                res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
             
@@ -45,7 +45,7 @@ const setUsersLogin = (router: Router, database: Db, route: string) => {
                 token: tokenInsert.ops[0].token
             });
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -59,7 +59,7 @@ const setUsersLogout = (router: Router, database: Db, route: string) => {
             const Tokens = database.collection('tokens');
 
             if(!exists(req.body.token)) {
-                res.status(400).json({success: false, status: 'incomplete'});
+                res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
 
@@ -82,7 +82,7 @@ const setUsersLogout = (router: Router, database: Db, route: string) => {
                 response: 'success'
             });
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -96,7 +96,7 @@ const setUsersChecktoken = (router: Router, database: Db, route: string) => {
             const Tokens = database.collection('tokens');
 
             if(!exists(req.body.token)) {
-                res.status(400).json({success: false, status: 'incomplete'});
+                res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
 
@@ -113,7 +113,7 @@ const setUsersChecktoken = (router: Router, database: Db, route: string) => {
                 response: 'success'
             });
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -126,7 +126,7 @@ const setUsersRegister = (router: Router, database: Db, route: string) => {
             const Users = database.collection('users');
 
             if(!exists(req.body.username, req.body.password, req.body.email)) {
-                res.status(400).json({success: false, status: 'incomplete'});
+                res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
 
@@ -176,7 +176,7 @@ const setUsersRegister = (router: Router, database: Db, route: string) => {
                 userId: userInsert.ops[0]._id
             });
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -216,7 +216,7 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
                 messages: messages
             });
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });

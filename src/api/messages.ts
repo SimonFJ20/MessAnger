@@ -8,7 +8,7 @@ const setMessagsGet = (router: Router, database: Db, route: string) => {
         try {
             
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -19,7 +19,7 @@ const setMessagsGetlist = (router: Router, database: Db, route: string) => {
         try {
             
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -30,7 +30,7 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
         try {
             
         } catch(error) {
-            res.status(500).json({success: false, status: 'error'});
+            res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
