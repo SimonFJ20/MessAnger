@@ -25,7 +25,7 @@ Login in a user.
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'unknown' | 'incomplete' | 'error';
+    response: 'success' | 'unknown' | 'incomplete' | 'error',
     username?: string,
     userId?: string,
     token?: string
