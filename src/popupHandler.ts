@@ -1,5 +1,5 @@
 import { post } from './ajax'
-import { htmlElements } from './htmlElements'
+import { htmlElements } from './dom'
 import { formData } from './formData'
 
 export const displayForm = (name: string, message?: string) => {
@@ -18,7 +18,7 @@ export const displayForm = (name: string, message?: string) => {
 
         let label = <HTMLLabelElement>document.createElement('label');
         label.htmlFor = tempId;
-        label.textContent = formInputs[i].name;
+        label.textContent = formInputs[i].label || formInputs[i].name;
 
         let inputElement = <HTMLInputElement>document.createElement('input');
         inputElement.id = tempId;
@@ -40,7 +40,7 @@ export const displayForm = (name: string, message?: string) => {
 
     submitButton.addEventListener('click', () => {
         let data: { [field: string]: any } = {
-            token: sessionStorage.getItem('userToken'),
+            token: sessionStorage.getItem('token'),
         };
         for (let field in inputObjects) {
             data[field] = inputObjects[field].value
