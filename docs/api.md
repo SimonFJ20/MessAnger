@@ -442,7 +442,7 @@ sorted by timestamp, first to last
 ```typescript
 {
     success: boolean,
-    response: 'success' | 'no result' | 'error',
+    response: 'success' | 'no result' | 'incomplete' | 'error',
     messages: {
             messageId: string,
             roomId: string,
