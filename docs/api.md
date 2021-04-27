@@ -320,19 +320,21 @@ Specify special token, if rooms are private, with no relation.
 #### Response
 
 ```typescript
-[
-    {
-        roomId: string,
-        name: string,
-        descript: string,
-        creator: string, // userId
-        users: string[], // userId[] 
-        status: 'public' | 'hidden' | 'private',
-        messages: string[], // messageId[]
-        messageCount: number,
-        createdAt: Date
-    }
-]
+{
+    success: boolean,
+    response: 'success' | 'no result' | 'incomplete' | 'error',
+    rooms: {
+            roomId: string,
+            name: string,
+            descript: string,
+            creator: string, // userId
+            users: string[], // userId[] 
+            status: 'public' | 'hidden' | 'private',
+            messages: string[], // messageId[]
+            messageCount: number,
+            createdAt: Date
+        }[]
+}
 ```
 
 ### POST /create
