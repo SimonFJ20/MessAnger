@@ -19,7 +19,7 @@ const setRoomsGetall = (router: Router, database: Db, route: string) => {
 
             for(let i in types) {
                 if(types[i] !== 'public' && !existingSpcToken) {
-                    res.status(400).json({success: false, response: 'denied'});
+                    res.status(400).json({status: false, response: 'denied'});
                     return;
                 }
                 const roomsCursor = await Rooms.find({status: types[i]});
@@ -85,7 +85,7 @@ const setRoomsGet = (router: Router, database: Db, route: string) => {
                 ...room
             });
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -122,7 +122,7 @@ const setRoomsSearch = (router: Router, database: Db, route: string) => {
                 rooms: rooms
             });
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -198,7 +198,7 @@ const setRoomsGetconstrained = (router: Router, database: Db, route: string) => 
                 rooms: rooms
             });
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -246,7 +246,7 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
                 rooms: rooms
             });
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -264,6 +264,8 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
                 return;
             }
             
+            const roomList = req.body.rooms;
+            
             let validToken = false;
             let tokenUser = '';
             const token = either(req.body.token, null);
@@ -275,35 +277,18 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
             
             let validSpcToken = false;
             const specialToken = either(req.body.specialToken, null);
-            const existingSpcToken = await SpecialTokens.findOne({token: specialToken});
+            const existingSpcToken = await SpecialTokens.findOne({token: token});
             if(existingSpcToken) validSpcToken = true;
             
-            const roomIdList = req.body.rooms as string[];
-            const roomObjectIdList = roomIdList.map(roomId => new ObjectId(roomId));
-
-            const roomsCursor = Rooms.find({
-                _id: {$in: roomObjectIdList},
-                $or: [
-                    {status: {$not: 'private'}},
-                    {creator: tokenUser},
-                    {users: {$in: [tokenUser]}}
-                ]
-            });
-
-            const rooms: any[] = [];
-            await roomsCursor.forEach((room) => {
-                if(room.status !== 'private') rooms.push(room);
-                else if(validSpcToken) rooms.push(room);
-                else if(validToken) rooms.push(room);
-            });
             
-            res.status(200).json({
-                success: true,
-                response: 'success',
-                rooms: rooms
-            });
+            const rooms: any[] = [];
+            for(let i in roomList) {
+                const room = await Rooms.findOne({_id: new ObjectId(roomList[i])});
+                
+            }
+            
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -312,17 +297,9 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
 const setRoomsCreate = (router: Router, database: Db, route: string) => {
     router.post(route, async (req, res) => {
         try {
-            const Users = database.collection('users');
-            const Rooms = database.collection('rooms');
-            const Tokens = database.collection('tokens');
-
-            if(!exists(req.body.token, req.body.name, req.body.description, req.body.status, req.body.password)) {
-                res.status(400).json({success: false, response: 'incomplete'});
-                return;
-            }
-
+            
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
         }
     });
@@ -333,7 +310,7 @@ const setRoomsJoin = (router: Router, database: Db, route: string) => {
         try {
             
         } catch(error) {
-            res.status(500).json({success: false, response: 'error'});
+            res.status(500).json({success: false, status: 'error'});
             console.error('Error on route /rooms/join', error);
         }
     });
