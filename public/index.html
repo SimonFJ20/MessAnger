@@ -14,7 +14,8 @@
         <input id="room-search" type="search" placeholder="search">
         <div id="room-list-container">
             <button class="room active">welcome</button>
-            <button class="room">test</button>
+            <button class="room">Chat</button>
+            <button class="room alert">Alert</button>
         </div>
         <p id="display-username">username</p>
         <button class="room" id="log-out">log out</button>
@@ -22,12 +23,12 @@
     <div id="chat-container">
         <h1 id="room-title">room title</h1>
         <div id="chat-list-container">
-            <div class="chat left">Hej, og velkommen til vores chat app.</div>
-            <div class="chat right">right chat test</div>
+            <div class="chat left">[server]: Hej, og velkommen til vores chat app.</div>
+            <div class="chat right">Tak!</div>
         </div>
         <input id="chat-field" placeholder="message">
     </div>
-    <div id="popup">
+    <div id="popup" class="hidden">
         <div class="form">
             <!-- content inside is decided by javascript presumably -->
             <label for="login-username">username</label>
