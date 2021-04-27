@@ -39,20 +39,21 @@ export const displayForm = (name: string, message?: string) => {
     htmlElements.popupForm.appendChild(submitButton)
 
     submitButton.addEventListener('click', () => {
-        let data: { [field: string]: any } = {};
+        let data: { [field: string]: any } = {
+            token: sessionStorage.getItem('userToken'),
+        };
         for (let field in inputObjects) {
             data[field] = inputObjects[field].value
         }
 
         post(formData[name].api, data, (response: any) => {
             if (!response.success) {
-                displayForm(name, response.response)
-                return
+                return displayForm(name, response.response)
             }
 
             htmlElements.popup.className = "hidden";
             if (formData[name].completed)
-                formData[name].completed();
+                return formData[name].completed(response);
         })
     }, {once: true})
 

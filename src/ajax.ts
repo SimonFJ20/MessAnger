@@ -7,7 +7,7 @@
  * @param {object} data - Optional, parse a JavaScript object as requst body
  */
 
- export const hostname = 'http://172.16.115.168:80'
+ export const hostname = 'http://178.157.218.63:25565'
 
  export const get = (url: string, callback: (response: object, error?: boolean) => void, data?: object): void => {
     

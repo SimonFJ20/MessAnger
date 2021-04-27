@@ -22,6 +22,9 @@ export const formData: any = {
                 displayForm('register');
             }, {once: true})
             htmlElements.popupForm.appendChild(button);    
+        },
+        completed: (response: any) => {
+            return sessionStorage.setItem('userToken', response.token)
         }
     },
     register: {
@@ -49,7 +52,7 @@ export const formData: any = {
             htmlElements.popupForm.appendChild(button);      
         },
         completed: () => {
-            displayForm('login')
+            return displayForm('login')
         },
     },
     createRoom: {
@@ -64,7 +67,6 @@ export const formData: any = {
             }
         ],
         api: hostname + '/api/rooms/create',
-        completed: () => {}
     },
     joinRoom: {
         title: 'join room',
@@ -75,30 +77,5 @@ export const formData: any = {
             }
         ],
         api: hostname + '/api/rooms/join',
-        completed: () => {},
     }
 }
-
-/* const createLoginForm = () => {
-    const inputForm = new InputForm('login', '/api/users/login');
-
-    return inputForm
-}
-const createRegisterForm = () => {}
-const createCreateRoomForm = () => {}
-const createJoinRoomForm = () => {}
-
-export class InputForm {
-    public title: string;
-    public objects: object[];
-    public apiRoute: string;
-
-    public constructor(title: string, apiRoute: string) {
-        this.title = title;
-        this.objects = [];
-        this.apiRoute = apiRoute;
-    }
-
-    public created?: () => void;
-    public completed?: () => void;
-} */

@@ -8,5 +8,5 @@ export const htmlElements = {
     'chatList': document.getElementById('chat-list-container')!,
     'chatField': document.getElementById('chat-field')!,
     'popup': document.getElementById('popup')!,
-    'popupForm': document.getElementById('popup-form')!!,
+    'popupForm': document.getElementById('popup-form')!,
 }
