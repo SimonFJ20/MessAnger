@@ -99,8 +99,9 @@ const setRoomsSearch = (router: Router, database: Db, route: string) => {
             const search = either(req.body.search, '');
             const amount = either(req.body.amount, null);
 
-            const roomsCursor = Rooms.find({$text: {$search: '\"' + search + '\"'}})
-            .sort({score: {$meta: "textScore"}}).project({_id: 1});
+            const roomsCursor = Rooms.find({name: {$regex: new RegExp(search, 'gi')}})
+            .sort({users: 1}).project({_id: 1});
+            //.sort({score: {$meta: "textScore"}}).project({_id: 1, score: {$meta: "textScore"}});
 
             if(amount && typeof(amount) === 'number') roomsCursor.limit(amount);
 
@@ -357,8 +358,8 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
             const roomInsert = await Rooms.insertOne({
                 name: room.name,
                 description: room.description,
-                creator: token.user,
-                users: [token.user],
+                creator: existingToken.user,
+                users: [existingToken.user],
                 status: room.status,
                 password: room.password,
                 messages: [],
@@ -370,12 +371,11 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
                 return;
             }
 
-            Rooms.createIndex({name: 'text'});
-
-            const user = await Users.findOne({_id: new ObjectId(token.user)});
+            const user = await Users.findOne({_id: new ObjectId(existingToken.user)});
             user.joinedRooms.push(roomInsert.insertedId);
             user.createdRooms.push(roomInsert.insertedId);
             const userReplace = await Users.replaceOne({_id: new ObjectId(user._id)}, user);
+            
 
             res.status(200).json({
                 success: true,
