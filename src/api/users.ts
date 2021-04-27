@@ -132,7 +132,7 @@ const setUsersRegister = (router: Router, database: Db, route: string) => {
 
             const user = {
                 username: req.body.username,
-                password: req.body.password,
+                password: await bcrypt.hash(req.body.password, 10),
                 email: req.body.email,
                 bio: either(req.body.bio, '')
             }

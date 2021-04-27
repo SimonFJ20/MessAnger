@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Db, ObjectId } from "mongodb";
+import { Db, FilterQuery, ObjectId } from "mongodb";
 import { either, exists } from "../utils";
 import bcrypt from 'bcrypt';
 
@@ -128,10 +128,75 @@ const setRoomsSearch = (router: Router, database: Db, route: string) => {
     });
 }
 
+const stringSortToIntSort = (string: string) => {
+    if(string === 'ascending') return 1
+    if(string === 'descending') return -1;
+    return 1;
+}
+
 const setRoomsGetconstrained = (router: Router, database: Db, route: string) => {
     router.get(route, async (req, res) => {
         try {
+            const Rooms = database.collection('rooms');
             
+            if(!exists(req.body.amount)) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+            
+            const sortBy = either(req.body.sortBy, 'default');
+            const sortType = either(req.body.sortType, 'default');
+            
+            const amount = req.body.amount;
+            
+            const name = either(req.body.name, null);
+            const description = either(req.body.description, null);
+            const creator = either(req.body.creator, null);
+            const userCount = either(req.body.userCount, null);
+            const messageCount = either(req.body.messageCount, null);
+            const createdBefore = either(req.body.createdBefore, null);
+            const createdAfter = either(req.body.createdAfter, null);
+            
+            const query: FilterQuery<any> = {};
+            
+            if(name) query['name'] = name;
+            if(description) query['description'] = description;
+            if(creator) query['creator'] = creator;
+            if(userCount) query['users'] = {$size: userCount};
+            if(messageCount) query['messages'] = {$size: messageCount};
+            query['createdAt'] = {};
+            if(createdBefore) query['createdAt']['$lte'] = new Date(createdBefore);
+            if(createdAfter) query['createdAt']['$gte'] = new Date(createdAfter);
+            
+            const roomsCursor = Rooms.find(query).project({_id: 1});
+            
+            switch(sortBy) {
+                case 'userCount':
+                    roomsCursor.sort({userCount: stringSortToIntSort(sortType)});
+                    return;
+                case 'messageCount':
+                    roomsCursor.sort({message: stringSortToIntSort(sortType)});
+                    return;
+                case 'date':
+                    roomsCursor.sort({createdAt: stringSortToIntSort(sortType)});
+                    return;
+            }
+            
+            roomsCursor.limit(amount);
+            
+            const rooms: string[] = [];
+            await roomsCursor.forEach(room => rooms.push(room));
+            
+            if(rooms.length === 0) {
+                res.status(200).json({success: true, response: 'no result'});
+                return;
+            }
+            
+            res.status(200).json({
+                success: true,
+                response: 'success',
+                rooms: rooms
+            });
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
@@ -142,7 +207,44 @@ const setRoomsGetconstrained = (router: Router, database: Db, route: string) => 
 const setRoomsGetuser = (router: Router, database: Db, route: string) => {
     router.get(route, async (req, res) => {
         try {
+            const Rooms = database.collection('rooms');
+            const Tokens = database.collection('tokens');
             
+            if(!exists(req.body.tokens)) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+            
+            const token = req.body.token;
+            const relation = either(req.body.relation, []);
+            const types = either(req.body.types, []);
+            
+            const existingToken = await Tokens.findOne({token: token});
+            if(!existingToken) {
+                res.status(400).json({success: false, response: 'unknown'});
+                return;
+            }
+            
+            if(relation.length < 2 || types.length < 3) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+            
+            const query: FilterQuery<any> = {$and: [{$or: []}, {$or: []}]};
+            
+            for(let i in relation) query.$and![0].$or!.push(relation[i]);
+            for(let i in types) query.$and![1].$or!.push(relation[i]);
+            
+            const roomsCursor = await Rooms.find(query).project({_id: 1});
+            
+            const rooms: string[] = [];
+            await roomsCursor.forEach(room => rooms.push(room._id));
+            
+            res.status(200).json({
+                success: true,
+                response: 'success',
+                rooms: rooms
+            });
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
             console.error('Error on route ' + route, error);
