@@ -31,6 +31,11 @@ body {
     height: 100vh;
 }
 
+a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* popup stuff */
 
 #popup.hidden {
