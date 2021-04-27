@@ -79,6 +79,8 @@ const setUsersLogout = (router: Router, database: Db, route: string) => {
                 return;
             }
 
+            const deletedTokens = await Tokens.deleteMany({user: existingToken.user});
+
             res.status(200).json({
                 success: true,
                 response: 'success'
