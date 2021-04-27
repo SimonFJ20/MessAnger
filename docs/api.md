@@ -440,15 +440,17 @@ sorted by timestamp, first to last
 #### Response
 
 ```typescript
-[
-    {
-        messageId: string,
-        roomId: string,
-        message: string,
-        author: string, // userId
-        timestamp: Date
-    }
-]
+{
+    success: boolean,
+    response: 'success' | 'no result' | 'error',
+    messages: {
+            messageId: string,
+            roomId: string,
+            message: string,
+            author: string, // userId
+            timestamp: Date
+        }[]
+}
 ```
 
 ### POST /post
