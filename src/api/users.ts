@@ -8,7 +8,7 @@ const setUsersLogin = (router: Router, database: Db, route: string) => {
         try {
             const Users = database.collection('users');
             const Tokens = database.collection('tokens');
-
+            
             if(!exists(req.body.username, req.body.password)) {
                 res.status(400).json({success: false, status: 'incomplete'});
                 return;

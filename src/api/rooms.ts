@@ -255,6 +255,37 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
 const setRoomsGetlist = (router: Router, database: Db, route: string) => {
     router.get(route, async (req, res) => {
         try {
+            const Rooms = database.collection('rooms');
+            const Tokens = database.collection('tokens');
+            const SpecialTokens = database.collection('specialTokens');
+            
+            if(!exists(req.body.rooms) || typeof(req.body.rooms) === 'object') {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+            
+            const roomList = req.body.rooms;
+            
+            let validToken = false;
+            let tokenUser = '';
+            const token = either(req.body.token, null);
+            const existingToken = await Tokens.findOne({token: token});
+            if(existingToken) {
+                validToken = true;
+                tokenUser = existingToken.user;
+            }
+            
+            let validSpcToken = false;
+            const specialToken = either(req.body.specialToken, null);
+            const existingSpcToken = await SpecialTokens.findOne({token: token});
+            if(existingSpcToken) validSpcToken = true;
+            
+            
+            const rooms: any[] = [];
+            for(let i in roomList) {
+                const room = await Rooms.findOne({_id: new ObjectId(roomList[i])});
+                
+            }
             
         } catch(error) {
             res.status(500).json({success: false, status: 'error'});
