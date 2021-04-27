@@ -321,6 +321,65 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
                 return;
             }
 
+            if(typeof (req.body.name) !== 'string' || typeof (req.body.name) !== 'string'
+            || (req.body.status !== 'public' && req.body.status !== 'hidden' && req.body.status !== 'private')) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+
+            if(req.body.status === 'private' && req.body.password === '') {
+                res.status(400).json({success: false, response: 'no password'});
+                return;
+            }
+
+
+            const room = {
+                name: req.body.name,
+                description: req.body.description,
+                status: req.body.status,
+                password: req.body.password ? await bcrypt.hash(req.body.password, 10) : ''
+            }
+
+            
+            const existingNameRoom = await Rooms.findOne({name: room.name});
+            if(existingNameRoom) {
+                res.status(400).json({success: false, response: 'name taken'});
+                return;
+            }
+
+            const token = req.body.token;
+            const existingToken = await Tokens.findOne({token: token});
+            if(!existingToken) {
+                res.status(400).json({success: false, response: 'unknown'});
+                return;
+            }
+
+            const roomInsert = await Rooms.insertOne({
+                name: room.name,
+                description: room.description,
+                creator: token.user,
+                users: [token.user],
+                status: room.status,
+                password: room.password,
+                messages: [],
+                createdAt: Date()
+            });
+
+            if(roomInsert.insertedCount === 0) {
+                res.status(400).json({success: false, response: 'error'});
+                return;
+            }
+
+            const user = await Users.findOne({_id: new ObjectId(token.user)});
+            user.joinedRooms.push(roomInsert.insertedId);
+            user.createdRooms.push(roomInsert.insertedId);
+            const userReplace = await Users.replaceOne({_id: new ObjectId(user._id)}, user);
+
+            res.status(200).json({
+                success: true,
+                response: 'success',
+                roomId: roomInsert.insertedId
+            });
         } catch(error) {
             res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);
@@ -331,7 +390,50 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
 const setRoomsJoin = (router: Router, database: Db, route: string) => {
     router.post(route, async (req, res) => {
         try {
-            
+            const Users = database.collection('users');
+            const Rooms = database.collection('rooms');
+            const Tokens = database.collection('tokens');
+
+            if(!exists(req.body.token, req.body.roomId, req.body.password)) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+
+            const token = req.body.token;
+            const existingToken = await Tokens.findOne({token: token});
+            if(!existingToken) {
+                res.status(400).json({success: false, response: 'unknown token'});
+                return;
+            }
+
+            const room = req.body.roomId;
+            const existingRoom = await Rooms.findOne({_id: new ObjectId(room)});
+            if(!existingRoom) {
+                res.status(400).json({success: false, response: 'unknown room'});
+                return;
+            }
+
+            if(existingRoom.status === 'private') {
+                if(!existingRoom.users.find((u: string) => u === token.user)
+                && !await bcrypt.compare(req.body.password, existingRoom.password)) {
+                    res.status(400).json({success: false, response: 'denied'});
+                    return;
+                }    
+            }
+
+            existingRoom.users.push(token.user);
+            const roomReplace = await Rooms.replaceOne({_id: new ObjectId(existingRoom._id)}, existingRoom);
+
+            const user = await Users.findOne({_id: new ObjectId(existingToken.user)});
+            const userJoinedRooms = user.joinedRooms as string[];
+            userJoinedRooms.push(existingRoom._id);
+            user.joinedRooms = userJoinedRooms;
+            const userReplace = await Users.replaceOne({_id: new ObjectId(user._id)}, user);
+
+            res.status(200).json({
+                success: true,
+                response: 'success'
+            });
         } catch(error) {
             res.status(500).json({success: false, response: 'error'});
             console.error('Error on route /rooms/join', error);
