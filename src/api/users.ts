@@ -226,16 +226,20 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
     });
 }
 
-const clearUserTokens = async (database: Db) => {
+const clearUserTokens = async (database: Db, maxTimeInSeconds: number) => {
     const Tokens = database.collection('tokens');
-    const maxTime = 7200000;
-    const tokens = Tokens.find();
-    const expiredTokens: any[] = [];
-    await tokens.forEach((token) => {
-        const tokenDate = new Date(token.createdAt);
-        if(Date.now() - tokenDate.getMilliseconds() > maxTime) expiredTokens.push(new ObjectId(token._id));
-    });
-    const deletedTokens = await Tokens.deleteMany({_id: {$in: expiredTokens}});
+    const tokenCursor = Tokens.find();
+    const tokens: any[] = []
+    await tokenCursor.forEach(t => tokens.push(t));
+    const tokensToDelete: ObjectId[] = [];
+    for(let i in tokens) {
+        const dateNow = new Date(Date.now());
+        const dateCreated = new Date(tokens[i].createdAt);
+        const timeNow = dateNow.getSeconds() + dateNow.getMinutes() * 60 + dateNow.getHours() * 360 + dateNow.getDay() * 8640;
+        const timeCreated = dateCreated.getSeconds() + dateCreated.getMinutes() * 60 + dateCreated.getHours() * 360 + dateCreated.getDay() * 8640;
+        if(timeNow - timeCreated > maxTimeInSeconds) tokensToDelete.push(new ObjectId(tokens[i]._id));
+    }
+    const deletedTokens = await Tokens.deleteMany({_id: {$in: tokensToDelete}});
 }
 
 export const setUsers = (router: Router, database: Db, route: string) => {
@@ -245,5 +249,5 @@ export const setUsers = (router: Router, database: Db, route: string) => {
     setUsersRegister(router, database, route + '/register');
     setUsersGetdata(router, database, route + '/getdata');
 
-    setInterval(clearUserTokens, 60000, database);
+    setInterval(clearUserTokens, 10000, database, 720);
 }
