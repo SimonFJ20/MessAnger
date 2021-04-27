@@ -370,6 +370,8 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
                 return;
             }
 
+            Rooms.createIndex({name: 'text'});
+
             const user = await Users.findOne({_id: new ObjectId(token.user)});
             user.joinedRooms.push(roomInsert.insertedId);
             user.createdRooms.push(roomInsert.insertedId);
