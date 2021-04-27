@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { Db } from "mongodb";
+import { exists } from "../utils";
 
 
 
 const setMessagsGet = (router: Router, database: Db, route: string) => {
     router.get(route, async (req, res) => {
         try {
-            
+            const Messages = database.collection('messages');
+
+            if(!exists(req.body.messageId)) {
+                res.status(500).json({success: false, response: 'error'});
+            }
+
         } catch(error) {
             res.status(500).json({success: false, response: 'error'});
             console.error('Error on route ' + route, error);

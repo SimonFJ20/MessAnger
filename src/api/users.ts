@@ -28,6 +28,8 @@ const setUsersLogin = (router: Router, database: Db, route: string) => {
                 return;
             }
 
+            const deletedTokens = Tokens.deleteMany({user: user._id});
+
             const tokenInsert = await Tokens.insertOne({
                 token: generateId(32),
                 user: user._id,
