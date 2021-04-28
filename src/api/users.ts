@@ -294,7 +294,6 @@ const setUsersGet = (router: Router, database: Db, route: string) => {
         }
     });
 }
-}
 
 const clearUserTokens = async (database: Db, maxTimeInSeconds: number) => {
     const Tokens = database.collection('tokens');
