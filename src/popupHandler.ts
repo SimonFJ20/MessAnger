@@ -46,6 +46,18 @@ export const displayForm = (name: string, message?: string) => {
             data[field] = inputObjects[field].value
         }
 
+        // af simon, til at fixe /rooms/create
+        if(formData[name].api === 'https://www.simonfj20.site/api/rooms/create') {
+            const tempData = {
+                token: sessionStorage.getItem('token'),
+                name: data['name'],
+                description: data['description'] || '',
+                status: data['status'] || 'public',
+                password: data['status'] === 'private' ? data['password (leave blank if public)'] : ''
+            }
+            data = tempData;
+        }
+
         post(formData[name].api, data, (response: any) => {
             if (!response.success) {
                 return displayForm(name, response.response)

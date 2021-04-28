@@ -94,6 +94,9 @@ export const formData: any = {
                 htmlElements.popup.className = 'hidden';
             }, {once: true})
             htmlElements.popupForm.appendChild(button);
+        },
+        completed: () => {
+            useRoomHandler();
         }
     },
     joinRoom: {
