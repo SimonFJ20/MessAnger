@@ -2,7 +2,7 @@ import { post } from './ajax'
 import { htmlElements } from './dom'
 import { formData } from './formData'
 
-export const displayForm = (name: string, message?: string) => {
+export const displayForm = (name: string, message?: string, roomIdForJoinClick?: string) => {
     htmlElements.popup.className = '';
     if (!formData[name]) {
         htmlElements.popupForm.innerHTML = `form inputs of name ${name} not available.`;
@@ -23,7 +23,10 @@ export const displayForm = (name: string, message?: string) => {
         let inputElement = <HTMLInputElement>document.createElement('input');
         inputElement.id = tempId;
         inputElement.placeholder = '...';
-        inputElement.type = formInputs[i].type || 'text',
+        inputElement.type = formInputs[i].type || 'text';
+
+        // af simon til at join
+        if(name === 'joinRoom' && formInputs[i].name === 'roomId') inputElement.value = roomIdForJoinClick || '';
 
         htmlElements.popupForm.append(label, inputElement);
         inputObjects[formInputs[i].name] = inputElement;

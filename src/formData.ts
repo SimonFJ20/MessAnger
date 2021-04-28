@@ -113,5 +113,17 @@ export const formData: any = {
             }
         ],
         api: hostname + '/api/rooms/join',
+        created: () => {
+            let button = <HTMLButtonElement>document.createElement('button');
+            button.textContent = 'cancel'
+            button.addEventListener('click', () => {
+                htmlElements.popupForm.innerHTML = '';
+                htmlElements.popup.className = 'hidden';
+            }, {once: true})
+            htmlElements.popupForm.appendChild(button);
+        },
+        completed: () => {
+            updateRooms();
+        }
     }
 }

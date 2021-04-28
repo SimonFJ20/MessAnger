@@ -26,14 +26,21 @@ export const useMessageHandler = () => {
 export const displayMessage = (data: any) => {
     htmlElements.roomTitle.textContent = data.name;
     htmlElements.chatList.innerHTML = ''
-    get(hostname + '/api/messages/getlist', (response: any) => {
+    get(hostname + '/api/messages/getlist', async (response: any) => {
         for (let message in response.messages) {
             let chatElement = <HTMLElement>document.createElement('div')
             if (response.messages[message].author === sessionStorage.getItem('userId')) {
                 chatElement.textContent = response.messages[message].message;
                 chatElement.className = "chat right"
             } else {
-                chatElement.textContent = '[' + response.messages[message].author + ']: ' + response.messages[message].message;
+
+                // af simon
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json'),
+                headers.append('Data-Body', JSON.stringify({userId: response.messages[message].author}));
+                const user = await (await fetch(hostname + '/api/users/get', {headers: headers, method: 'GET', redirect: 'follow'})).json();
+                
+                chatElement.textContent = '[' + (user ? user.username : response.messages[message].author) + ']: ' + response.messages[message].message;
                 chatElement.className = "chat left"
             }
             htmlElements.chatList.appendChild(chatElement);

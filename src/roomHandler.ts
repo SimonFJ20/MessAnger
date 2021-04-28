@@ -12,6 +12,7 @@ export const useRoomHandler = () => {
     htmlElements.joinRoom.addEventListener('click', () => {
         displayForm('joinRoom')
     })
+    initRoomSearch();
     updateRooms();
 }
 
@@ -57,4 +58,32 @@ export const updateRooms = () => {
             }
         }, {token: token, rooms: userResponse.rooms})
     }, {token: token, relation: ['joined', 'created'], types: ['public', 'hidden', 'private']})
+
+}
+
+const initRoomSearch = () => {
+    // af simon
+    const roomSearch = htmlElements.roomSearch as HTMLInputElement
+    roomSearch.addEventListener('focusout', () => {setTimeout(() => {updateRooms(); roomSearch.value = ''}, 100)});
+    roomSearch.addEventListener('input', () => {
+        get(hostname + '/api/rooms/search', (res1: any) => {
+            get(hostname + '/api/rooms/getlist', (res: any) => {
+                if(!res.success) {
+                    console.error('search failed to GET list');
+                    return;
+                }
+                htmlElements.roomList.innerHTML = '';
+                const rooms = res.rooms as any[];
+                for(let i in rooms) {
+                    const button = document.createElement('button');
+                    button.className = 'room';
+                    button.textContent = rooms[i].name;
+                    htmlElements.roomList.appendChild(button);
+                    button.addEventListener('click', () => {
+                        displayForm('joinRoom', undefined, rooms[i]._id);
+                    });
+                }
+            }, {token: sessionStorage.getItem('token'), rooms: res1.rooms})
+        }, {search: roomSearch.value});
+    });
 }
