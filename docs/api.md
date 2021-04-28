@@ -166,6 +166,31 @@ Get usernames from list of userIds
 }
 ```
 
+### GET /get
+
+Get usernames from list of userIds
+
+`/api/users/get`
+
+#### Request
+
+```typescript
+{
+    userId: string
+}
+```
+
+#### Response
+
+```typescript
+{
+    success: boolean,
+    response: 'success' | 'unknown' | 'incomplete' | 'error',
+    userId: string,
+    username: string
+}
+```
+
 ## Rooms
 
 Handling data fetching, creation, etc.
