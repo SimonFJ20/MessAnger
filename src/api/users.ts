@@ -318,6 +318,7 @@ export const setUsers = (router: Router, database: Db, route: string) => {
     setUsersRegister(router, database, route + '/register');
     setUsersGetdata(router, database, route + '/getdata');
     setUsersGetlist(router, database, route + '/getlist');
+    setUsersGet(router, database, route + '/get');
     
     setInterval(clearUserTokens, 10000, database, 720);
 }
