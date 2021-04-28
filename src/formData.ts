@@ -1,7 +1,7 @@
 import { htmlElements } from "./dom";
 import { displayForm } from "./popupHandler";
 import { hostname } from './ajax';
-import { useRoomHandler } from "./roomHandler";
+import { updateRooms, useRoomHandler } from "./roomHandler";
 import { useUserHandler } from "./userHandler";
 import { useMessageHandler } from "./messageHandler";
 
@@ -96,7 +96,7 @@ export const formData: any = {
             htmlElements.popupForm.appendChild(button);
         },
         completed: () => {
-            useRoomHandler();
+            updateRooms();
         }
     },
     joinRoom: {
