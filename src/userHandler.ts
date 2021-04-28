@@ -10,7 +10,7 @@ export const useUserHandler = () => {
             post(hostname + '/api/users/logout', {token: sessionStorage.getItem('token')}, () => {
                 htmlElements.roomList.innerHTML = '';
                 htmlElements.chatList.innerHTML = '';
-                sessionStorage.removeItem('token')
+                sessionStorage.clear()
                 displayForm('login');
             })
         }
