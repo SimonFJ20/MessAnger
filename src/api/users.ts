@@ -228,6 +228,42 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
     });
 }
 
+const setUsersGetlist = (router: Router, database: Db, route: string) => {
+    router.get(route, async (req, res) => {
+        try {
+            const Users = database.collection('users');
+
+            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            
+            if(!exists(req.body.users)) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+
+            const userIds = req.body.users as string[];
+            const objectIds: ObjectId[] = [];
+            for(let i in userIds) {
+                objectIds.push(new ObjectId(userIds[i]));
+            }
+            
+            const usersCursor = Users.find({_id: {$in: objectIds}}).project({_id: 1, username: 1});
+            
+            const users: object[] = [];
+            await usersCursor.forEach(user => users.push(user));
+            
+            
+            res.status(200).json({
+                success: true, 
+                response: 'success',
+                users: users
+            });
+        } catch(error) {
+            res.status(500).json({success: false, response: 'error'});
+            console.error('Error on route ' + route, error);
+        }
+    });
+}
+
 const clearUserTokens = async (database: Db, maxTimeInSeconds: number) => {
     const Tokens = database.collection('tokens');
     const tokenCursor = Tokens.find();
@@ -250,6 +286,7 @@ export const setUsers = (router: Router, database: Db, route: string) => {
     setUsersChecktoken(router, database, route + '/checktoken');
     setUsersRegister(router, database, route + '/register');
     setUsersGetdata(router, database, route + '/getdata');
-
+    setUsersGetlist(router, database, route + '/getlist');
+    
     setInterval(clearUserTokens, 10000, database, 720);
 }
