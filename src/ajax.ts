@@ -7,7 +7,7 @@
  * @param {object} data - Optional, parse a JavaScript object as requst body
  */
 
- export const hostname = 'http://178.157.218.63:25565'
+ export const hostname = 'http://172.16.115.168:80'
 
  export const get = (url: string, callback: (response: object, error?: boolean) => void, data?: object): void => {
     
@@ -19,13 +19,20 @@
 
     headers.append("Content-Type", "application/json");
 
+    headers.append("Data-Body", body)
 
+
+    const options: RequestInit = {
+        method: 'GET',
+        headers: headers,
+        redirect: 'follow'
+    }
 
     // maximum error handling to maintain stability
     try {
 
         // execute request, follows redirects, expects json
-        fetch(url, {method: 'GET', headers: headers, body: body, redirect: 'follow'})
+        fetch(url, options)
             .then(body => body.json())
             .then(response => callback(response))
             .catch(error => callback(error, true));

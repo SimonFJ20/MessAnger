@@ -3,6 +3,7 @@ import { displayForm } from "./popupHandler";
 import { hostname } from './ajax';
 import { useRoomHandler } from "./roomHandler";
 import { useUserHandler } from "./userHandler";
+import { useMessageHandler } from "./messageHandler";
 
 export const formData: any = {
     login: {
@@ -29,9 +30,11 @@ export const formData: any = {
             sessionStorage.setItem('username', response.username);
             sessionStorage.setItem('userId', response.userId);
             sessionStorage.setItem('token', response.token);
+            sessionStorage.removeItem('roomId')
 
             useRoomHandler();
             useUserHandler();
+            useMessageHandler();
             return true;
         }
     },

@@ -3,6 +3,7 @@ import { htmlElements } from "./dom";
 import { useUserHandler } from "./userHandler";
 import { displayForm } from "./popupHandler";
 import { useRoomHandler } from "./roomHandler";
+import { useMessageHandler } from "./messageHandler";
 
 const start = () => {
     if (sessionStorage.getItem('token')) {
@@ -12,6 +13,7 @@ const start = () => {
             } else {
                 useRoomHandler();
                 useUserHandler();
+                useMessageHandler();
                 htmlElements.popup.className = 'hidden';
             }
         })

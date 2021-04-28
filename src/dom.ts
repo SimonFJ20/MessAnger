@@ -6,7 +6,7 @@ export const htmlElements = {
     'logOut': document.getElementById('log-out')!,
     'roomTitle': document.getElementById('room-title')!,
     'chatList': document.getElementById('chat-list-container')!,
-    'chatField': document.getElementById('chat-field')!,
+    'chatField': <HTMLInputElement>document.getElementById('chat-field')!,
     'popup': document.getElementById('popup')!,
     'popupForm': document.getElementById('popup-form')!,
 }
