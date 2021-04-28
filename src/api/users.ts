@@ -276,7 +276,7 @@ const setUsersGet = (router: Router, database: Db, route: string) => {
                 return;
             }
             
-            const user = await Users.findOne({_id: new ObjectId(req.body.userId)}).project({_id: 1, username: 1});
+            const user = await Users.findOne({_id: new ObjectId(req.body.userId)}, {_id: 1, username: 1});
             if(!user) {
                 res.status(400).json({success: false, response: 'unknown'});
                 return;
