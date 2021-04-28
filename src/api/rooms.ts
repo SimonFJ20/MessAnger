@@ -9,7 +9,7 @@ const setRoomsGetall = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const SpecialTokens = database.collection('specialTokens');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             const types = either(req.body.types, ['public']);
 
@@ -46,7 +46,7 @@ const setRoomsGet = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const Tokens = database.collection('tokens');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.room)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -82,11 +82,19 @@ const setRoomsGet = (router: Router, database: Db, route: string) => {
                     return;
                 }
             }
-
+            
             res.status(200).json({
                 success: true,
                 response: 'success',
-                ...room
+                roomId: room._id,
+                name: room.name,
+                description: room.description,
+                creator: room.creator,
+                users: room.users,
+                status: room.status,
+                messages: room.messages,
+                messageCount: room.messages.length,
+                createdAt: room.createdAt
             });
         } catch(error) {
             res.status(500).json({success: false, response: 'error'});
@@ -100,7 +108,7 @@ const setRoomsSearch = (router: Router, database: Db, route: string) => {
         try {
             const Rooms = database.collection('rooms');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             const search = either(req.body.search, '');
             const amount = either(req.body.amount, null);
@@ -146,7 +154,7 @@ const setRoomsGetconstrained = (router: Router, database: Db, route: string) => 
         try {
             const Rooms = database.collection('rooms');
             
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.amount)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -219,7 +227,7 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const Tokens = database.collection('tokens');
             
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.token)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -278,7 +286,7 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
             const Tokens = database.collection('tokens');
             const SpecialTokens = database.collection('specialTokens');
             
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.rooms) || typeof(req.body.rooms) === 'object') {
                 res.status(400).json({success: false, response: 'incomplete'});

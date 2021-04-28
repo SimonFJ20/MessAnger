@@ -194,7 +194,7 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
             const Messages = database.collection('messages');
             const Tokens = database.collection('tokens');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.token)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -233,7 +233,7 @@ const setUsersGetlist = (router: Router, database: Db, route: string) => {
         try {
             const Users = database.collection('users');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.users)) {
                 res.status(400).json({success: false, response: 'incomplete'});

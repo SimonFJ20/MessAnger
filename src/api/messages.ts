@@ -9,7 +9,7 @@ const setMessagsGet = (router: Router, database: Db, route: string) => {
         try {
             const Messages = database.collection('messages');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.messageId)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -45,7 +45,7 @@ const setMessagsGetlist = (router: Router, database: Db, route: string) => {
         try {
             const Messages = database.collection('messages');
 
-            if(!req.body || req.body === {}) req.body = JSON.parse(<string>req.headers['data-body']);
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.messages)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -117,7 +117,7 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
                     return;
                 }
             }
-
+            
             const messageInsert = await Messages.insertOne({
                 room: existingRoom._id,
                 message: message,
