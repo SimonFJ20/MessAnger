@@ -321,6 +321,7 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
 
             const rooms: any[] = [];
             await roomsCursor.forEach((room) => {
+                room.roomId = room._id;
                 if(room.status !== 'private') rooms.push(room);
                 else if(validSpcToken) rooms.push(room);
                 else if(validToken) rooms.push(room);
