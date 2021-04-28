@@ -1,8 +1,8 @@
 import express from 'express';
+import http from 'http';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import path from 'path';
-import fs from 'fs';
 import { Db, MongoClient } from 'mongodb';
 import { api } from './api';
 
@@ -24,22 +24,20 @@ const server = async () => {
     
     const portHTTP = parseInt(<string>process.env.HTTP_PORT);
     
-    const server = express();
+    const app = express();
+    const server = http.createServer(app);
     
-    server.use(cors({}));
-    server.use(express.json());
-    server.use(express.urlencoded({extended: true}));
+    app.use(cors({}));
+    app.use(express.json());
+    app.use(express.urlencoded({extended: true}));
     
-    server.use('/api', await api(<Db>await connectToMongodb()));
-    server.use(express.static(path.join(__dirname, '../public')));
+    app.use('/api', await api(<Db>await connectToMongodb()));
+    app.use(express.static(path.join(__dirname, '../public')));
     
     server.listen(portHTTP, () => {
         console.log('MessAnger backend on port', portHTTP);
     });
 }
-
-
-
 
 server().catch((error) => {
     console.error('Failed to start server', error);

@@ -3,7 +3,6 @@ import { Db, ObjectId } from "mongodb";
 import { exists } from "../utils";
 
 
-
 const setMessagsGet = (router: Router, database: Db, route: string) => {
     router.get(route, async (req, res) => {
         try {
@@ -139,7 +138,6 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
         }
     });
 }
-
 
 export const setMessags = (router: Router, database: Db, route: string) => {
     setMessagsGet(router, database, route + '/get');

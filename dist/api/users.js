@@ -97,7 +97,7 @@ var setUsersLogin = function (router, database, route) {
                     res.status(200).json({
                         success: true,
                         response: 'success',
-                        userId: user.id,
+                        userId: user._id,
                         username: user.username,
                         token: tokenInsert.ops[0].token
                     });
@@ -274,6 +274,8 @@ var setUsersGetdata = function (router, database, route) {
                     Users = database.collection('users');
                     Messages = database.collection('messages');
                     Tokens = database.collection('tokens');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
                     if (!utils_1.exists(req.body.token)) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
@@ -302,6 +304,46 @@ var setUsersGetdata = function (router, database, route) {
                     console.error('Error on route ' + route, error_5);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
+            }
+        });
+    }); });
+};
+var setUsersGetlist = function (router, database, route) {
+    router.get(route, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var Users, userIds, objectIds, i, usersCursor, users_1, error_6;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    Users = database.collection('users');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
+                    if (!utils_1.exists(req.body.users)) {
+                        res.status(400).json({ success: false, response: 'incomplete' });
+                        return [2 /*return*/];
+                    }
+                    userIds = req.body.users;
+                    objectIds = [];
+                    for (i in userIds) {
+                        objectIds.push(new mongodb_1.ObjectId(userIds[i]));
+                    }
+                    usersCursor = Users.find({ _id: { $in: objectIds } }).project({ _id: 1, username: 1 });
+                    users_1 = [];
+                    return [4 /*yield*/, usersCursor.forEach(function (user) { return users_1.push(user); })];
+                case 1:
+                    _a.sent();
+                    res.status(200).json({
+                        success: true,
+                        response: 'success',
+                        users: users_1
+                    });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_6 = _a.sent();
+                    res.status(500).json({ success: false, response: 'error' });
+                    console.error('Error on route ' + route, error_6);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
         });
     }); });
@@ -339,6 +381,7 @@ var setUsers = function (router, database, route) {
     setUsersChecktoken(router, database, route + '/checktoken');
     setUsersRegister(router, database, route + '/register');
     setUsersGetdata(router, database, route + '/getdata');
+    setUsersGetlist(router, database, route + '/getlist');
     setInterval(clearUserTokens, 10000, database, 720);
 };
 exports.setUsers = setUsers;

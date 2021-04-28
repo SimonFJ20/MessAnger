@@ -40,6 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var http_1 = __importDefault(require("http"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var cors_1 = __importDefault(require("cors"));
 var path_1 = __importDefault(require("path"));
@@ -68,24 +69,25 @@ var connectToMongodb = function () { return __awaiter(void 0, void 0, void 0, fu
     });
 }); };
 var server = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var portHTTP, server, _a, _b, _c, _d;
+    var portHTTP, app, server, _a, _b, _c, _d;
     return __generator(this, function (_e) {
         switch (_e.label) {
             case 0:
                 dotenv_1.default.config();
                 portHTTP = parseInt(process.env.HTTP_PORT);
-                server = express_1.default();
-                server.use(cors_1.default({}));
-                server.use(express_1.default.json());
-                server.use(express_1.default.urlencoded({ extended: true }));
-                _b = (_a = server).use;
+                app = express_1.default();
+                server = http_1.default.createServer(app);
+                app.use(cors_1.default({}));
+                app.use(express_1.default.json());
+                app.use(express_1.default.urlencoded({ extended: true }));
+                _b = (_a = app).use;
                 _c = ['/api'];
                 _d = api_1.api;
                 return [4 /*yield*/, connectToMongodb()];
             case 1: return [4 /*yield*/, _d.apply(void 0, [_e.sent()])];
             case 2:
                 _b.apply(_a, _c.concat([_e.sent()]));
-                server.use(express_1.default.static(path_1.default.join(__dirname, '../public')));
+                app.use(express_1.default.static(path_1.default.join(__dirname, '../public')));
                 server.listen(portHTTP, function () {
                     console.log('MessAnger backend on port', portHTTP);
                 });

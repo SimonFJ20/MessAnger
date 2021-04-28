@@ -47,6 +47,8 @@ var setMessagsGet = function (router, database, route) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     Messages = database.collection('messages');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
                     if (!utils_1.exists(req.body.messageId)) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
@@ -87,6 +89,8 @@ var setMessagsGetlist = function (router, database, route) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
                     Messages = database.collection('messages');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
                     if (!utils_1.exists(req.body.messages)) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];

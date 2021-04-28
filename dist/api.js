@@ -42,14 +42,9 @@ var messages_1 = require("./api/messages");
 var rooms_1 = require("./api/rooms");
 var users_1 = require("./api/users");
 var api = function (database) { return __awaiter(void 0, void 0, void 0, function () {
-    var router, Users, Rooms, Messages, Tokens, SpecialTokens;
+    var router;
     return __generator(this, function (_a) {
         router = express_1.Router();
-        Users = database.collection('users');
-        Rooms = database.collection('rooms');
-        Messages = database.collection('messages');
-        Tokens = database.collection('tokens');
-        SpecialTokens = database.collection('specialTokens');
         users_1.setUsers(router, database, '/users');
         rooms_1.setRooms(router, database, '/rooms');
         messages_1.setMessags(router, database, '/messages');

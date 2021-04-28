@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -63,6 +52,13 @@ var setRoomsGetall = function (router, database, route) {
                     _d.trys.push([0, 9, , 10]);
                     Rooms = database.collection('rooms');
                     SpecialTokens = database.collection('specialTokens');
+                    try {
+                        if (!req.body || JSON.stringify(req.body) == '{}')
+                            req.body = JSON.parse(req.headers['data-body']);
+                    }
+                    catch (e) {
+                        //console.error(e);
+                    }
                     types = utils_1.either(req.body.types, ['public']);
                     specialToken = utils_1.either(req.body.specialToken, null);
                     if (!specialToken) return [3 /*break*/, 2];
@@ -124,6 +120,8 @@ var setRoomsGet = function (router, database, route) {
                     _a.trys.push([0, 5, , 6]);
                     Rooms = database.collection('rooms');
                     Tokens = database.collection('tokens');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
                     if (!utils_1.exists(req.body.room)) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
@@ -160,7 +158,19 @@ var setRoomsGet = function (router, database, route) {
                     res.status(400).json({ success: false, response: 'denied' });
                     return [2 /*return*/];
                 case 4:
-                    res.status(200).json(__assign({ success: true, response: 'success' }, room));
+                    res.status(200).json({
+                        success: true,
+                        response: 'success',
+                        roomId: room._id,
+                        name: room.name,
+                        description: room.description,
+                        creator: room.creator,
+                        users: room.users,
+                        status: room.status,
+                        messages: room.messages,
+                        messageCount: room.messages.length,
+                        createdAt: room.createdAt
+                    });
                     return [3 /*break*/, 6];
                 case 5:
                     error_2 = _a.sent();
@@ -180,6 +190,8 @@ var setRoomsSearch = function (router, database, route) {
                 case 0:
                     _a.trys.push([0, 3, , 4]);
                     Rooms = database.collection('rooms');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
                     search = utils_1.either(req.body.search, '');
                     amount = utils_1.either(req.body.amount, null);
                     roomsCursor = Rooms.find({ name: { $regex: new RegExp(search, 'gi') } })
@@ -232,6 +244,8 @@ var setRoomsGetconstrained = function (router, database, route) {
                 case 0:
                     _a.trys.push([0, 2, , 3]);
                     Rooms = database.collection('rooms');
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
                     if (!utils_1.exists(req.body.amount)) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
@@ -301,23 +315,26 @@ var setRoomsGetconstrained = function (router, database, route) {
 };
 var setRoomsGetuser = function (router, database, route) {
     router.get(route, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var Rooms, Tokens, token, relation, types, existingToken, query, i, i, roomsCursor, rooms_4, error_5;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var Rooms, Tokens, token, relation, types, existingToken, query, userCheck, typesCheck, roomsCursor, rooms_4, error_5;
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _a.trys.push([0, 4, , 5]);
+                    _c.trys.push([0, 4, , 5]);
                     Rooms = database.collection('rooms');
                     Tokens = database.collection('tokens');
-                    if (!utils_1.exists(req.body.tokens)) {
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
+                    if (!utils_1.exists(req.body.token)) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
                     }
                     token = req.body.token;
-                    relation = utils_1.either(req.body.relation, []);
-                    types = utils_1.either(req.body.types, []);
+                    relation = utils_1.either(req.body.relation, ['joined', 'created']);
+                    types = utils_1.either(req.body.types, ['public']);
                     return [4 /*yield*/, Tokens.findOne({ token: token })];
                 case 1:
-                    existingToken = _a.sent();
+                    existingToken = _c.sent();
                     if (!existingToken) {
                         res.status(400).json({ success: false, response: 'unknown' });
                         return [2 /*return*/];
@@ -326,18 +343,28 @@ var setRoomsGetuser = function (router, database, route) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
                     }
-                    query = { $and: [{ $or: [] }, { $or: [] }] };
-                    for (i in relation)
-                        query.$and[0].$or.push(relation[i]);
-                    for (i in types)
-                        query.$and[1].$or.push(relation[i]);
+                    query = { $and: [] };
+                    userCheck = { $or: [] };
+                    if (relation.find(function (r) { return r === 'created'; }))
+                        userCheck.$or.push({ creator: existingToken.user });
+                    if (relation.find(function (r) { return r === 'joined'; }))
+                        userCheck.$or.push({ users: { $in: [existingToken.user] } });
+                    (_a = query.$and) === null || _a === void 0 ? void 0 : _a.push(userCheck);
+                    typesCheck = { $or: [] };
+                    if (types.find(function (t) { return t === 'public'; }))
+                        typesCheck.$or.push({ status: 'public' });
+                    if (types.find(function (t) { return t === 'hidden'; }))
+                        typesCheck.$or.push({ status: 'hidden' });
+                    if (types.find(function (t) { return t === 'private'; }))
+                        typesCheck.$or.push({ status: 'private' });
+                    (_b = query.$and) === null || _b === void 0 ? void 0 : _b.push(typesCheck);
                     return [4 /*yield*/, Rooms.find(query).project({ _id: 1 })];
                 case 2:
-                    roomsCursor = _a.sent();
+                    roomsCursor = _c.sent();
                     rooms_4 = [];
                     return [4 /*yield*/, roomsCursor.forEach(function (room) { return rooms_4.push(room._id); })];
                 case 3:
-                    _a.sent();
+                    _c.sent();
                     res.status(200).json({
                         success: true,
                         response: 'success',
@@ -345,7 +372,7 @@ var setRoomsGetuser = function (router, database, route) {
                     });
                     return [3 /*break*/, 5];
                 case 4:
-                    error_5 = _a.sent();
+                    error_5 = _c.sent();
                     res.status(500).json({ success: false, response: 'error' });
                     console.error('Error on route ' + route, error_5);
                     return [3 /*break*/, 5];
@@ -364,7 +391,9 @@ var setRoomsGetlist = function (router, database, route) {
                     Rooms = database.collection('rooms');
                     Tokens = database.collection('tokens');
                     SpecialTokens = database.collection('specialTokens');
-                    if (!utils_1.exists(req.body.rooms) || typeof (req.body.rooms) === 'object') {
+                    if (!req.body || JSON.stringify(req.body) == '{}')
+                        req.body = JSON.parse(req.headers['data-body']);
+                    if (!utils_1.exists(req.body.rooms) || typeof (req.body.rooms) !== 'object') {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
                     }
@@ -390,13 +419,14 @@ var setRoomsGetlist = function (router, database, route) {
                     roomsCursor = Rooms.find({
                         _id: { $in: roomObjectIdList },
                         $or: [
-                            { status: { $not: 'private' } },
+                            { status: { $in: ['public', 'hidden'] } },
                             { creator: tokenUser },
                             { users: { $in: [tokenUser] } }
                         ]
                     });
                     rooms_5 = [];
                     return [4 /*yield*/, roomsCursor.forEach(function (room) {
+                            room.roomId = room._id;
                             if (room.status !== 'private')
                                 rooms_5.push(room);
                             else if (validSpcToken_1)
@@ -519,7 +549,7 @@ var setRoomsCreate = function (router, database, route) {
 };
 var setRoomsJoin = function (router, database, route) {
     router.post(route, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var Users, Rooms, Tokens, token_1, existingToken, room, existingRoom, _a, roomReplace, user, userJoinedRooms, userReplace, error_8;
+        var Users, Rooms, Tokens, token, existingToken_1, room, existingRoom, roomUsers, _a, i, roomReplace, user, userJoinedRooms, userReplace, error_8;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -531,11 +561,11 @@ var setRoomsJoin = function (router, database, route) {
                         res.status(400).json({ success: false, response: 'incomplete' });
                         return [2 /*return*/];
                     }
-                    token_1 = req.body.token;
-                    return [4 /*yield*/, Tokens.findOne({ token: token_1 })];
+                    token = req.body.token;
+                    return [4 /*yield*/, Tokens.findOne({ token: token })];
                 case 1:
-                    existingToken = _b.sent();
-                    if (!existingToken) {
+                    existingToken_1 = _b.sent();
+                    if (!existingToken_1) {
                         res.status(400).json({ success: false, response: 'unknown token' });
                         return [2 /*return*/];
                     }
@@ -547,8 +577,9 @@ var setRoomsJoin = function (router, database, route) {
                         res.status(400).json({ success: false, response: 'unknown room' });
                         return [2 /*return*/];
                     }
+                    roomUsers = existingRoom.users;
                     if (!(existingRoom.status === 'private')) return [3 /*break*/, 5];
-                    _a = !existingRoom.users.find(function (u) { return u === token_1.user; });
+                    _a = !roomUsers.find(function (u) { return u === existingToken_1.user; });
                     if (!_a) return [3 /*break*/, 4];
                     return [4 /*yield*/, bcrypt_1.default.compare(req.body.password, existingRoom.password)];
                 case 3:
@@ -561,11 +592,17 @@ var setRoomsJoin = function (router, database, route) {
                     }
                     _b.label = 5;
                 case 5:
-                    existingRoom.users.push(token_1.user);
+                    for (i in roomUsers) {
+                        if (new mongodb_1.ObjectId(roomUsers[i]).equals(existingToken_1.user)) {
+                            res.status(200).json({ success: true, response: 'already joined' });
+                            return [2 /*return*/];
+                        }
+                    }
+                    existingRoom.users.push(existingToken_1.user);
                     return [4 /*yield*/, Rooms.replaceOne({ _id: new mongodb_1.ObjectId(existingRoom._id) }, existingRoom)];
                 case 6:
                     roomReplace = _b.sent();
-                    return [4 /*yield*/, Users.findOne({ _id: new mongodb_1.ObjectId(existingToken.user) })];
+                    return [4 /*yield*/, Users.findOne({ _id: new mongodb_1.ObjectId(existingToken_1.user) })];
                 case 7:
                     user = _b.sent();
                     userJoinedRooms = user.joinedRooms;
