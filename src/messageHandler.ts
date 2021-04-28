@@ -5,7 +5,6 @@ export const useMessageHandler = () => {
     htmlElements.chatField.addEventListener('keypress', (event: KeyboardEvent) => {
         if (!sessionStorage.getItem('roomId') || sessionStorage.getItem('roomId') === 'undefined') return;
         if (event.key === 'Enter') {
-            console.log(sessionStorage.getItem('roomId'))
             post(hostname + '/api/messages/post', {
                 token: sessionStorage.getItem('token'),
                 roomId: sessionStorage.getItem('roomId'),
@@ -16,6 +15,8 @@ export const useMessageHandler = () => {
                     chatElement.textContent = htmlElements.chatField.value;
                     chatElement.className = "chat right"    
                     htmlElements.chatList.appendChild(chatElement);
+
+                    htmlElements.chatField.value = '';
                 }
             })
         }
