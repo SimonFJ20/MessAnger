@@ -288,7 +288,7 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
             
             if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
             
-            if(!exists(req.body.rooms) || typeof(req.body.rooms) === 'object') {
+            if(!exists(req.body.rooms) || typeof(req.body.rooms) !== 'object') {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
@@ -313,7 +313,7 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
             const roomsCursor = Rooms.find({
                 _id: {$in: roomObjectIdList},
                 $or: [
-                    {status: {$not: 'private'}},
+                    {status: {$in: ['public', 'hidden']}},
                     {creator: tokenUser},
                     {users: {$in: [tokenUser]}}
                 ]
