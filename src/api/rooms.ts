@@ -254,9 +254,6 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
             if(types.find((t: string) => t === 'private')) typesCheck.$or.push({status: 'private'});
             query.$and?.push(typesCheck);
             
-            
-            console.log(JSON.stringify(query));
-            
             const roomsCursor = await Rooms.find(query).project({_id: 1});
             
             const rooms: string[] = [];
