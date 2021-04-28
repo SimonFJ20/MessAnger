@@ -350,7 +350,7 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const Tokens = database.collection('tokens');
 
-            if(!exists(req.body.token, req.body.name, req.body.description, req.body.status, req.body.password)) {
+            if(!exists(req.body.token, req.body.name)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
@@ -361,7 +361,7 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
                 return;
             }
 
-            if(req.body.status === 'private' && req.body.password === '') {
+            if(req.body.status === 'private' && !req.body.password) {
                 res.status(400).json({success: false, response: 'no password'});
                 return;
             }
@@ -369,8 +369,8 @@ const setRoomsCreate = (router: Router, database: Db, route: string) => {
 
             const room = {
                 name: req.body.name,
-                description: req.body.description,
-                status: req.body.status,
+                description: req.body.description || '',
+                status: req.body.status || 'public',
                 password: req.body.password ? await bcrypt.hash(req.body.password, 10) : ''
             }
 
