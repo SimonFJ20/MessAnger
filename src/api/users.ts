@@ -108,7 +108,7 @@ const setUsersChecktoken = (router: Router, database: Db, route: string) => {
 
             const existingToken = await Tokens.findOne({token: token});
             if(!existingToken) {
-                res.status(400).json({success: false, response: 'unknown'});
+                res.status(200).json({success: true, response: 'unknown'});
                 return;
             }
 
