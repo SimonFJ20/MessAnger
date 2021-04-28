@@ -1,5 +1,6 @@
 export const htmlElements = {
     'createRoom': document.getElementById('create-room')!,
+    'joinRoom': document.getElementById('join-room')!,
     'roomSearch': document.getElementById('room-search')!,
     'roomList': document.getElementById('room-list-container')!,
     'usernameDisplay': document.getElementById('username-display')!,

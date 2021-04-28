@@ -9,6 +9,9 @@ export const useRoomHandler = () => {
     htmlElements.createRoom.addEventListener('click', () => {
         displayForm('createRoom')
     })
+    htmlElements.joinRoom.addEventListener('click', () => {
+        displayForm('joinRoom')
+    })
     updateRooms();
 }
 
