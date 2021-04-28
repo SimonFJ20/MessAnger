@@ -9,7 +9,11 @@ const setRoomsGetall = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const SpecialTokens = database.collection('specialTokens');
 
-            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
+            try {
+                if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
+            } catch(e) {
+                //console.error(e);
+            }
             
             const types = either(req.body.types, ['public']);
 
@@ -444,15 +448,24 @@ const setRoomsJoin = (router: Router, database: Db, route: string) => {
                 return;
             }
 
+            const roomUsers = existingRoom.users as string[];
+            
             if(existingRoom.status === 'private') {
-                if(!existingRoom.users.find((u: string) => u === token.user)
+                if(!roomUsers.find((u: string) => u === existingToken.user)
                 && !await bcrypt.compare(req.body.password, existingRoom.password)) {
                     res.status(400).json({success: false, response: 'denied'});
                     return;
                 }    
             }
 
-            existingRoom.users.push(token.user);
+            for(let i in roomUsers) {
+                if(new ObjectId(roomUsers[i]).equals(existingToken.user)) {
+                    res.status(200).json({success: true, response: 'already joined'});
+                    return;
+                }
+            }
+
+            existingRoom.users.push(existingToken.user);
             const roomReplace = await Rooms.replaceOne({_id: new ObjectId(existingRoom._id)}, existingRoom);
 
             const user = await Users.findOne({_id: new ObjectId(existingToken.user)});
