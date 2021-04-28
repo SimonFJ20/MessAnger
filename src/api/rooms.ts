@@ -221,14 +221,14 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
             
             req.body = JSON.parse(<string>req.headers['data-body']);
             
-            if(!exists(req.body.tokens)) {
+            if(!exists(req.body.token)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;
             }
             
             const token = req.body.token;
-            const relation = either(req.body.relation, []);
-            const types = either(req.body.types, []);
+            const relation = either(req.body.relation, ['joined', 'created']);
+            const types = either(req.body.types, ['public']);
             
             const existingToken = await Tokens.findOne({token: token});
             if(!existingToken) {
@@ -241,10 +241,21 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
                 return;
             }
             
-            const query: FilterQuery<any> = {$and: [{$or: []}, {$or: []}]};
+            const query: FilterQuery<any> = {$and: []};
             
-            for(let i in relation) query.$and![0].$or!.push(relation[i]);
-            for(let i in types) query.$and![1].$or!.push(relation[i]);
+            const userCheck: any = {$or: []};
+            if(relation.find((r: string) => r === 'created')) userCheck.$or.push({creator: existingToken.user});
+            if(relation.find((r: string) => r === 'joined')) userCheck.$or.push({users: {$in: [existingToken.user]}});
+            query.$and?.push(userCheck);
+            
+            const typesCheck: any = {$or: []};
+            if(types.find((t: string) => t === 'public')) typesCheck.$or.push({status: 'public'});
+            if(types.find((t: string) => t === 'hidden')) typesCheck.$or.push({status: 'hidden'});
+            if(types.find((t: string) => t === 'private')) typesCheck.$or.push({status: 'private'});
+            query.$and?.push(typesCheck);
+            
+            
+            console.log(JSON.stringify(query));
             
             const roomsCursor = await Rooms.find(query).project({_id: 1});
             
