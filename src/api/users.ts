@@ -264,6 +264,34 @@ const setUsersGetlist = (router: Router, database: Db, route: string) => {
     });
 }
 
+const setUsersGet = (router: Router, database: Db, route: string) => {
+    router.get(route, async (req, res) => {
+        try {
+            const Users = database.collection('users');
+
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
+            
+            if(!exists(req.body.userId)) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+            
+            const user = Users.findOne({_id: new ObjectId(req.body.userId)}).project({_id: 1, username: 1});
+            
+            res.status(200).json({
+                success: true, 
+                response: 'success',
+                userId: user._id,
+                username: user.username
+            });
+        } catch(error) {
+            res.status(500).json({success: false, response: 'error'});
+            console.error('Error on route ' + route, error);
+        }
+    });
+}
+}
+
 const clearUserTokens = async (database: Db, maxTimeInSeconds: number) => {
     const Tokens = database.collection('tokens');
     const tokenCursor = Tokens.find();
