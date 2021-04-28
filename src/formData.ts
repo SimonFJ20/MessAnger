@@ -100,8 +100,13 @@ export const formData: any = {
         title: 'join room',
         objects: [
             {
+                name: 'roomId',
+                label: 'room id',
+            },
+            {
                 name: 'password',
                 type: 'password',
+                label: 'password (leave blank for none)'
             }
         ],
         api: hostname + '/api/rooms/join',
