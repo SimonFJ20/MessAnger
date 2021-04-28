@@ -42,7 +42,7 @@ const setUsersLogin = (router: Router, database: Db, route: string) => {
             res.status(200).json({
                 success: true,
                 response: 'success',
-                userId: user.id,
+                userId: user._id,
                 username: user.username,
                 token: tokenInsert.ops[0].token
             });

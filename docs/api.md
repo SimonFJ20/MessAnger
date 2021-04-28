@@ -137,6 +137,35 @@ Get all data relating to user. GPDR Compliance
 }
 ```
 
+### GET /getlist
+
+Get usernames from list of userIds
+
+`/api/users/getlist`
+
+#### Request
+
+```typescript
+{
+    users: string[] // userId[]
+}
+```
+
+#### Response
+
+```typescript
+{
+    success: boolean,
+    response: 'success' | 'no result' | 'incomplete' | 'error',
+    users: [
+        {
+            username: string,
+            userId: string
+        }
+    ]
+}
+```
+
 ## Rooms
 
 Handling data fetching, creation, etc.
