@@ -9,6 +9,8 @@ const setMessagsGet = (router: Router, database: Db, route: string) => {
         try {
             const Messages = database.collection('messages');
 
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             if(!exists(req.body.messageId)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;
@@ -43,6 +45,8 @@ const setMessagsGetlist = (router: Router, database: Db, route: string) => {
         try {
             const Messages = database.collection('messages');
 
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             if(!exists(req.body.messages)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;

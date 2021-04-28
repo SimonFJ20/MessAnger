@@ -194,6 +194,8 @@ const setUsersGetdata = (router: Router, database: Db, route: string) => {
             const Messages = database.collection('messages');
             const Tokens = database.collection('tokens');
 
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             if(!exists(req.body.token)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;

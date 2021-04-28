@@ -9,6 +9,8 @@ const setRoomsGetall = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const SpecialTokens = database.collection('specialTokens');
 
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             const types = either(req.body.types, ['public']);
 
             const specialToken = either(req.body.specialToken, null);
@@ -44,6 +46,8 @@ const setRoomsGet = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const Tokens = database.collection('tokens');
 
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             if(!exists(req.body.room)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;
@@ -96,6 +100,8 @@ const setRoomsSearch = (router: Router, database: Db, route: string) => {
         try {
             const Rooms = database.collection('rooms');
 
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             const search = either(req.body.search, '');
             const amount = either(req.body.amount, null);
 
@@ -139,6 +145,8 @@ const setRoomsGetconstrained = (router: Router, database: Db, route: string) => 
     router.get(route, async (req, res) => {
         try {
             const Rooms = database.collection('rooms');
+            
+            req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.amount)) {
                 res.status(400).json({success: false, response: 'incomplete'});
@@ -211,6 +219,8 @@ const setRoomsGetuser = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const Tokens = database.collection('tokens');
             
+            req.body = JSON.parse(<string>req.headers['data-body']);
+            
             if(!exists(req.body.tokens)) {
                 res.status(400).json({success: false, response: 'incomplete'});
                 return;
@@ -259,6 +269,8 @@ const setRoomsGetlist = (router: Router, database: Db, route: string) => {
             const Rooms = database.collection('rooms');
             const Tokens = database.collection('tokens');
             const SpecialTokens = database.collection('specialTokens');
+            
+            req.body = JSON.parse(<string>req.headers['data-body']);
             
             if(!exists(req.body.rooms) || typeof(req.body.rooms) === 'object') {
                 res.status(400).json({success: false, response: 'incomplete'});
