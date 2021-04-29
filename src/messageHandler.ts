@@ -1,5 +1,6 @@
 import { get, hostname, post } from "./ajax"
 import { htmlElements } from "./dom"
+import { useRoomHandler } from "./roomHandler";
 
 let universalMessageInterval: any;
 
@@ -28,7 +29,6 @@ export const useMessageHandler = () => {
 const updateMessages = (data: any) => {
     htmlElements.chatList.innerHTML = ''
     get(hostname + '/api/messages/getlist', async (response: any) => {
-        console.log(response.messages.length)
         for (let message in response.messages) {
             let chatElement = <HTMLElement>document.createElement('div')
             if (response.messages[message].author === sessionStorage.getItem('userId')) {
@@ -62,7 +62,10 @@ export const displayMessage = (data: any) => {
         const lastUpdated = await (await fetch(hostname + '/api/messages/checkupdated', { headers: headers, method: 'GET', redirect: 'follow' })).json();
         if(lastUpdated.lastUpdated !== lastUpdate) {
             lastUpdate = lastUpdated.lastUpdated;
-            updateMessages(data);
+            console.log()
+            get(hostname + '/api/rooms/get', (response) => {
+                updateMessages(response)
+            }, {token: sessionStorage.getItem('token'), room: sessionStorage.getItem('roomId')})
         }
     }, 1000);
 }
