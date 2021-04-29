@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="dk">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Chat</title>
+    <link rel="shortcut icon" href="favicon.png" type="x-image/png">
+</head>
+<body>
+    <div id="room-container">
+        <button class="room" id="join-room">join room</button>
+        <button class="room" id="create-room">create room</button>
+        <input id="room-search" type="search" placeholder="search">
+        <div id="room-list-container">
+            <button class="room active">welcome</button>
+            <button class="room">chat</button>
+            <button class="room alert">alert</button>
+        </div>
+        <p id="username-display">username</p>
+        <button class="room" id="log-out">log out</button>
+    </div>
+    <div id="chat-container">
+        <h1 id="room-title"></h1>
+        <div id="chat-list-container">
+            <!-- content inside is decided by javascript -->
+        </div>
+        <input id="chat-field" placeholder="message">
+    </div>
+    <div id="popup" class="">
+        <div id="popup-form">
+            <!-- content inside is decided by javascript -->
+            Checking user token. Please make sure javascript is enabled.
+        </div>
+    </div>
+    <script src="../main.js"></script>
+</body>
+</html>

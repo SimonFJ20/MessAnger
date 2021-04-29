@@ -94,12 +94,5 @@ const initRoomSearch = () => {
     const roomSearch = htmlElements.roomSearch as HTMLInputElement
     roomSearch.addEventListener('input', () => {
         searchInputEvent(roomSearch);
-        console.log('????')
     });
-    /*roomSearch.addEventListener('search', () => {
-        searchInputEvent(roomSearch);
-    });*/
-    /*roomSearch.addEventListener('input', () => {
-        searchInputEvent(roomSearch);
-    });*/
 }
