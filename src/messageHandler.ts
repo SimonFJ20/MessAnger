@@ -1,6 +1,8 @@
 import { get, hostname, post } from "./ajax"
 import { htmlElements } from "./dom"
 
+let universalMessageInterval: any;
+
 export const useMessageHandler = () => {
     htmlElements.chatField.addEventListener('keypress', (event: KeyboardEvent) => {
         if (!sessionStorage.getItem('roomId') || sessionStorage.getItem('roomId') === 'undefined') return;
@@ -23,8 +25,7 @@ export const useMessageHandler = () => {
     })
 }
 
-export const displayMessage = (data: any) => {
-    htmlElements.roomTitle.textContent = data.name;
+const updateMessages = (data: any) => {
     htmlElements.chatList.innerHTML = ''
     get(hostname + '/api/messages/getlist', async (response: any) => {
         for (let message in response.messages) {
@@ -46,4 +47,22 @@ export const displayMessage = (data: any) => {
             htmlElements.chatList.appendChild(chatElement);
         }
     }, {messages: data.messages})
+}
+
+export const displayMessage = (data: any) => {
+    clearInterval(universalMessageInterval);
+    htmlElements.roomTitle.textContent = data.name;
+    updateMessages(data);
+    let lastUpdate = Date.now();
+    universalMessageInterval = setInterval(async () => {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json'),
+        headers.append('Data-Body', JSON.stringify({roomId: data.roomId}));
+        const lastUpdated = await (await fetch(hostname + '/api/messages/checkupdated', { headers: headers, method: 'GET', redirect: 'follow' })).json();
+        console.log(lastUpdated.lastUpdated, lastUpdate)
+        if(lastUpdated.lastUpdated !== lastUpdate) {
+            lastUpdate = lastUpdated.lastUpdated;
+            updateMessages(data);
+        }
+    }, 500);
 }
