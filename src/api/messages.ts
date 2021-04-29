@@ -161,7 +161,7 @@ const setMessagsCheckupdated = (router: Router, database: Db, route: string) => 
             res.status(200).json({
                 success: true,
                 response: 'success',
-                lastUpdated: new Date(room.lastUpdated)
+                lastUpdated: new Date(room.lastUpdated).returnMillis()
             });
         } catch(error) {
             res.status(500).json({success: false, response: 'error'});
