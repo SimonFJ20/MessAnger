@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 import http from 'http';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -19,6 +19,19 @@ const connectToMongodb = async () => {
     }
 }
 
+const netlifyRedirect = (router: Router) => {
+    router.get('/', async (req, res) => {
+       res.status(200).send(/*html*/`<html><head><meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>SimonFJ20 Redirect</title></head><body><h1>Redirecting</h1>
+       <script>window.location.href='https://messangerts.netlify.app/';
+       setTimeout(()=>{window.location.href='https://messangerts.netlify.app/';},500);
+       </script></body></html>`); 
+    });
+    return router
+}
+
 const server = async () => {
     dotenv.config();
     
@@ -32,6 +45,7 @@ const server = async () => {
     app.use(express.urlencoded({extended: true}));
     
     app.use('/api', await api(<Db>await connectToMongodb()));
+    netlifyRedirect(app);
     app.use(express.static(path.join(__dirname, '../public')));
     
     server.listen(portHTTP, () => {
