@@ -46,6 +46,7 @@ const updateMessages = (data: any) => {
             }
             htmlElements.chatList.appendChild(chatElement);
         }
+        htmlElements.chatList.scrollTo(0,document.body.scrollHeight);
     }, {messages: data.messages})
 }
 
