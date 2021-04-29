@@ -25,6 +25,10 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
         inputElement.placeholder = '...';
         inputElement.type = formInputs[i].type || 'text';
 
+        inputElement.addEventListener('keyup', (event: KeyboardEvent) => {
+            if (event.key === 'Enter') submit();
+        })
+
         // af simon til at join
         if(name === 'joinRoom' && formInputs[i].name === 'roomId') inputElement.value = roomIdForJoinClick || '';
 
@@ -41,7 +45,7 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
     submitButton.textContent = formData[name].title;
     htmlElements.popupForm.appendChild(submitButton)
 
-    submitButton.addEventListener('click', () => {
+    let submit = () => {
         let data: { [field: string]: any } = {
             token: sessionStorage.getItem('token'),
         };
@@ -70,6 +74,10 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
             if (formData[name].completed)
                 return formData[name].completed(response);
         })
+    }
+
+    submitButton.addEventListener('click', () => {
+        submit();
     }, {once: true})
 
     return true;
