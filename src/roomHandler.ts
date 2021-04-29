@@ -64,7 +64,7 @@ export const updateRooms = () => {
 const initRoomSearch = () => {
     // af simon
     const roomSearch = htmlElements.roomSearch as HTMLInputElement
-    roomSearch.addEventListener('focusout', () => {setTimeout(() => {updateRooms(); roomSearch.value = ''}, 100)});
+    roomSearch.addEventListener('focusout', () => {updateRooms()});
     roomSearch.addEventListener('input', () => {
         get(hostname + '/api/rooms/search', (res1: any) => {
             get(hostname + '/api/rooms/getlist', (res: any) => {
