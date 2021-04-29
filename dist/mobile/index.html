@@ -21,8 +21,10 @@
         <p id="username-display">username</p>
         <button class="room" id="log-out">log out</button>
     </div>
-    <div id="chat-container">
-        <h1 id="room-title"></h1>
+    <div id="chat-container" class="hidden">
+        <div>
+            <h1 id="back-button">&lt; </h1><h1 id="room-title"></h1>
+        </div>
         <div id="chat-list-container">
             <!-- content inside is decided by javascript -->
         </div>
@@ -35,5 +37,6 @@
         </div>
     </div>
     <script src="../main.js"></script>
+    <script src="mobile.js"></script>
 </body>
 </html>
