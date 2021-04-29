@@ -69,5 +69,5 @@ export const displayMessage = (data: any) => {
                 updateMessages(response)
             }, {token: sessionStorage.getItem('token'), room: sessionStorage.getItem('roomId')})
         }
-    }, 1000);
+    }, 200);
 }
