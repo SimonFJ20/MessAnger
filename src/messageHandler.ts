@@ -28,6 +28,7 @@ export const useMessageHandler = () => {
 const updateMessages = (data: any) => {
     htmlElements.chatList.innerHTML = ''
     get(hostname + '/api/messages/getlist', async (response: any) => {
+        console.log(response.messages.length)
         for (let message in response.messages) {
             let chatElement = <HTMLElement>document.createElement('div')
             if (response.messages[message].author === sessionStorage.getItem('userId')) {
@@ -46,7 +47,6 @@ const updateMessages = (data: any) => {
             }
             htmlElements.chatList.appendChild(chatElement);
         }
-        htmlElements.chatList.scrollTo(0,document.body.scrollHeight);
     }, {messages: data.messages})
 }
 
@@ -60,10 +60,9 @@ export const displayMessage = (data: any) => {
         headers.append('Content-Type', 'application/json'),
         headers.append('Data-Body', JSON.stringify({roomId: data.roomId}));
         const lastUpdated = await (await fetch(hostname + '/api/messages/checkupdated', { headers: headers, method: 'GET', redirect: 'follow' })).json();
-        console.log(lastUpdated.lastUpdated, lastUpdate)
         if(lastUpdated.lastUpdated !== lastUpdate) {
             lastUpdate = lastUpdated.lastUpdated;
             updateMessages(data);
         }
-    }, 500);
+    }, 1000);
 }
