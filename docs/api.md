@@ -532,3 +532,27 @@ Post a message to a room
     messageId: string,
 }
 ```
+
+### GET /checkupdated
+
+Post a message to a room
+
+`/api/messages/checkupdated`
+
+#### Request
+
+```typescript
+{
+    roomId: string
+}
+```
+
+#### Response
+
+```typescript
+{
+    success: boolean,
+    response: 'success' | 'unknown' | 'incomplete' | 'error',
+    lastUpdated: string | Date,
+}
+```

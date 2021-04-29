@@ -61,7 +61,7 @@
   resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.10.tgz#61cc8469849e5bcdd0c7044122265c39cec10cf4"
   integrity sha512-C7srjHiVG3Ey1nR6d511dtDkCEjxuN9W1HWAEjGq8kpcwmNM6JJkpC0xvabM7BXTG2wDq8Eu33iH9aQKa7IvLQ==
 
-"@types/express-serve-static-core@*", "@types/express-serve-static-core@^4.17.18":
+"@types/express-serve-static-core@^4.17.18":
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.17.19.tgz#00acfc1632e729acac4f1530e9e16f6dd1508a1d"
   integrity sha512-DJOSHzX7pCiSElWaGR8kCprwibCB/3yW6vcT8VG3P0SJjnv19gnWG/AZMfM60Xj/YJIp/YCaDHyvzsFVeniARA==
@@ -70,16 +70,7 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express-ws@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/express-ws/-/express-ws-3.0.0.tgz#89674edba2e9141916fc4d4d30fbd4f810e6b80b"
-  integrity sha512-GxsWec7Vp6h7sJuK0PwnZHeXNZnOwQn8kHAbCfvii66it5jXHTWzSg5cgHVtESwJfBLOe9SJ5wmM7C6gsDoyQw==
-  dependencies:
-    "@types/express" "*"
-    "@types/express-serve-static-core" "*"
-    "@types/ws" "*"
-
-"@types/express@*", "@types/express@^4.17.11":
+"@types/express@^4.17.11":
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.11.tgz#debe3caa6f8e5fcda96b47bd54e2f40c4ee59545"
   integrity sha512-no+R6rW60JEc59977wIxreQVsIEOAYwgCqldrA/vkpCnbD7MqTefO97lmoBe4WE0F156bC4uLSP1XHDOySnChg==
@@ -123,13 +114,6 @@
   integrity sha512-ZFqF6qa48XsPdjXV5Gsz0Zqmux2PerNd3a/ktL45mHpa19cuMi/cL8tcxdAx497yRh+QtYPuofjT9oWw9P7nkA==
   dependencies:
     "@types/mime" "^1"
-    "@types/node" "*"
-
-"@types/ws@*":
-  version "7.4.2"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.2.tgz#bfe739b5f8b3a39742605fbe415ae7e88ee614c8"
-  integrity sha512-PbeN0Eydl7LQl4OIav29YmkO2LxbVuz3nZD/kb19lOS+wLgIkRbWMNmU/QQR7ABpOJ7D7xDOU8co7iohObewrw==
-  dependencies:
     "@types/node" "*"
 
 abbrev@1:

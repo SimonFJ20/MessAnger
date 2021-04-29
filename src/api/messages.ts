@@ -125,6 +125,7 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
             });
 
             existingRoom.messages.push(messageInsert.insertedId);
+            existingRoom.lastUpdated = new Date();
             const roomReplace = await Rooms.replaceOne({_id: new ObjectId(existingRoom._id)}, existingRoom);
 
             res.status(200).json({
@@ -139,9 +140,40 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
     });
 }
 
+const setMessagsCheckupdated = (router: Router, database: Db, route: string) => {
+    router.get(route, async (req, res) => {
+        try {
+            const Rooms = database.collection('rooms');
+
+            if(!req.body || JSON.stringify(req.body) == '{}') req.body = JSON.parse(<string>req.headers['data-body']);
+            
+            if(!exists(req.body.roomId)) {
+                res.status(400).json({success: false, response: 'incomplete'});
+                return;
+            }
+
+            const room = await Rooms.findOne({_id: new ObjectId(req.body.roomId)}, {projection: {_id: 1, lastUpdated: 1}});
+            if(!room) {
+                res.status(400).json({success: false, response: 'unknown'});
+                return;
+            }
+            
+            res.status(200).json({
+                success: true,
+                response: 'success',
+                lastUpdated: room.lastUpdated
+            });
+        } catch(error) {
+            res.status(500).json({success: false, response: 'error'});
+            console.error('Error on route ' + route, error);
+        }
+    });
+}
+
 export const setMessags = (router: Router, database: Db, route: string) => {
     setMessagsGet(router, database, route + '/get');
     setMessagsGetlist(router, database, route + '/getlist');
     setMessagsPost(router, database, route + '/post');
+    setMessagsCheckupdated(router, database, route + '/checkupdated')
 }
 
