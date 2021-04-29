@@ -27,8 +27,8 @@ export const useMessageHandler = () => {
 }
 
 const updateMessages = (data: any) => {
-    htmlElements.chatList.innerHTML = ''
     get(hostname + '/api/messages/getlist', async (response: any) => {
+        const tempList = document.createElement('div');
         for (let message in response.messages) {
             let chatElement = <HTMLElement>document.createElement('div')
             if (response.messages[message].author === sessionStorage.getItem('userId')) {
@@ -45,8 +45,10 @@ const updateMessages = (data: any) => {
                 chatElement.textContent = '[' + (user ? user.username : response.messages[message].author) + ']: ' + response.messages[message].message;
                 chatElement.className = "chat left"
             }
-            htmlElements.chatList.appendChild(chatElement);
+            tempList.appendChild(chatElement);
         }
+        htmlElements.chatList.innerHTML = tempList.innerHTML;
+        htmlElements.chatList.scrollTo(0, htmlElements.chatList.scrollHeight)
     }, {messages: data.messages})
 }
 
