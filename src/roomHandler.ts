@@ -1,7 +1,7 @@
 import { get, hostname } from "./ajax"
 import { htmlElements } from "./dom"
 import { displayMessage } from "./messageHandler"
-import { displayForm } from "./popupHandler"
+import { displayForm, displayText } from "./popupHandler"
 
 let currentRoomButton: HTMLButtonElement;
 
@@ -11,6 +11,11 @@ export const useRoomHandler = () => {
     })
     htmlElements.joinRoom.addEventListener('click', () => {
         displayForm('joinRoom')
+    })
+    htmlElements.roomTitle.addEventListener('click', () => {
+        if (sessionStorage.getItem('roomId') && sessionStorage.getItem('roomId') !== 'undefined') {
+            displayText(`room id: ${sessionStorage.getItem('roomId')}`, 'room info')
+        }
     })
     initRoomSearch();
     updateRooms();

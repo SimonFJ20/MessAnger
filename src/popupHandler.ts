@@ -74,3 +74,16 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
 
     return true;
 }
+
+export const displayText = (text: string, label?: string) => {
+    htmlElements.popup.className = '';
+    htmlElements.popupForm.innerHTML = (label ? label + '\n' : '') + text
+
+    let button = <HTMLButtonElement>document.createElement('button');
+    button.textContent = 'exit'
+    button.addEventListener('click', () => {
+        htmlElements.popupForm.innerHTML = '';
+        htmlElements.popup.className = 'hidden';
+    }, {once: true})
+    htmlElements.popupForm.appendChild(button);
+}

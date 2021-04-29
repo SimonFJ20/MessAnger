@@ -181,7 +181,8 @@ a:hover {
 
     height: 4rem;
     padding: 0.5em 1em;
-
+}#room-title:hover {
+    text-decoration: underline 2px;
 }
 #chat-list-container {
     flex: 1;
