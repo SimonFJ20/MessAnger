@@ -77,7 +77,7 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
 
 export const displayText = (text: string, label?: string) => {
     htmlElements.popup.className = '';
-    htmlElements.popupForm.innerHTML = (label ? label + '\n' : '') + text
+    htmlElements.popupForm.innerHTML = (label ? `<p>${label}</p>` : '') + `<p>${text}</p>`;
 
     let button = <HTMLButtonElement>document.createElement('button');
     button.textContent = 'exit'
