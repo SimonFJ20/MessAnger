@@ -2,6 +2,37 @@ import { post } from './ajax'
 import { htmlElements } from './dom'
 import { formData } from './formData'
 
+let submit = (name: string, inputObjects: { [key: string]: HTMLInputElement; }) => {
+    let data: { [field: string]: any } = {
+        token: sessionStorage.getItem('token'),
+    };
+    for (let field in inputObjects) {
+        data[field] = inputObjects[field].value
+    }
+
+    // af simon, til at fixe /rooms/create
+    if(formData[name].api === 'https://www.simonfj20.site/api/rooms/create') {
+        const tempData = {
+            token: sessionStorage.getItem('token'),
+            name: data['name'],
+            description: data['description'] || '',
+            status: data['status'] || 'public',
+            password: data['status'] === 'private' ? data['password (leave blank if public)'] : ''
+        }
+        data = tempData;
+    }
+
+    post(formData[name].api, data, (response: any) => {
+        if (!response.success) {
+            return displayForm(name, response.response)
+        }
+
+        htmlElements.popup.className = "hidden";
+        if (formData[name].completed)
+            return formData[name].completed(response);
+    })
+}
+
 export const displayForm = (name: string, message?: string, roomIdForJoinClick?: string) => {
     htmlElements.popup.className = '';
     if (!formData[name]) {
@@ -25,8 +56,8 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
         inputElement.placeholder = '...';
         inputElement.type = formInputs[i].type || 'text';
 
-        inputElement.addEventListener('keyup', (event: KeyboardEvent) => {
-            if (event.key === 'Enter') submit();
+        inputElement.addEventListener('keydown', (event: KeyboardEvent) => {
+            if (event.key === 'Enter') submit(name, inputObjects);
         })
 
         // af simon til at join
@@ -45,39 +76,8 @@ export const displayForm = (name: string, message?: string, roomIdForJoinClick?:
     submitButton.textContent = formData[name].title;
     htmlElements.popupForm.appendChild(submitButton)
 
-    let submit = () => {
-        let data: { [field: string]: any } = {
-            token: sessionStorage.getItem('token'),
-        };
-        for (let field in inputObjects) {
-            data[field] = inputObjects[field].value
-        }
-
-        // af simon, til at fixe /rooms/create
-        if(formData[name].api === 'https://www.simonfj20.site/api/rooms/create') {
-            const tempData = {
-                token: sessionStorage.getItem('token'),
-                name: data['name'],
-                description: data['description'] || '',
-                status: data['status'] || 'public',
-                password: data['status'] === 'private' ? data['password (leave blank if public)'] : ''
-            }
-            data = tempData;
-        }
-
-        post(formData[name].api, data, (response: any) => {
-            if (!response.success) {
-                return displayForm(name, response.response)
-            }
-
-            htmlElements.popup.className = "hidden";
-            if (formData[name].completed)
-                return formData[name].completed(response);
-        })
-    }
-
     submitButton.addEventListener('click', () => {
-        submit();
+        submit(name, inputObjects);
     }, {once: true})
 
     return true;
