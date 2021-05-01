@@ -13,7 +13,7 @@ export const validateUsername = (username: string) => {
 }
 
 export const validateEmail = (email: string): boolean => {
-    const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/;
+    const re = /^[\w\.\-]+@[\w\-]+\.?[\w\-]+\.\w{2,}$/;
     return re.test(email)
 }
 
