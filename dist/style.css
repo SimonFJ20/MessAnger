@@ -203,6 +203,7 @@ a:hover {
     margin: 1em;
     padding: 1em 1em;
     word-wrap: break-word;
+    word-break: break-all;
 }
 .chat.right {
     border-right: 1px dotted var(--primary);
