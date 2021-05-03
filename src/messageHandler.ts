@@ -1,6 +1,5 @@
 import { get, hostname, post } from "./ajax"
 import { htmlElements } from "./dom"
-import { useRoomHandler } from "./roomHandler";
 
 let universalMessageInterval: any;
 
@@ -8,10 +7,11 @@ export const useMessageHandler = () => {
     htmlElements.chatField.addEventListener('keypress', (event: KeyboardEvent) => {
         if (!sessionStorage.getItem('roomId') || sessionStorage.getItem('roomId') === 'undefined') return;
         if (event.key === 'Enter') {
+            if (htmlElements.chatField.value.length > 512) displayMessage('message over 512 characters.')
             post(hostname + '/api/messages/post', {
                 token: sessionStorage.getItem('token'),
                 roomId: sessionStorage.getItem('roomId'),
-                message: htmlElements.chatField.value,
+                message: htmlElements.chatField.value.slice(0, 512),
             }, (response: any) => {
                 if (response.success && response.response === 'success') {
                     let chatElement = <HTMLElement>document.createElement('div')
@@ -64,7 +64,6 @@ export const displayMessage = (data: any) => {
         const lastUpdated = await (await fetch(hostname + '/api/messages/checkupdated', { headers: headers, method: 'GET', redirect: 'follow' })).json();
         if(lastUpdated.lastUpdated !== lastUpdate) {
             lastUpdate = lastUpdated.lastUpdated;
-            console.log()
             get(hostname + '/api/rooms/get', (response) => {
                 updateMessages(response)
             }, {token: sessionStorage.getItem('token'), room: sessionStorage.getItem('roomId')})
