@@ -7,11 +7,12 @@ let universalMessageInterval: any;
 export const useMessageHandler = () => {
     htmlElements.chatField.addEventListener('keypress', (event: KeyboardEvent) => {
         if (!sessionStorage.getItem('roomId') || sessionStorage.getItem('roomId') === 'undefined') return;
+        if (htmlElements.chatField.value.length > 512) displayMessage('message over 512 characters, sliced.')
         if (event.key === 'Enter') {
             post(hostname + '/api/messages/post', {
                 token: sessionStorage.getItem('token'),
                 roomId: sessionStorage.getItem('roomId'),
-                message: htmlElements.chatField.value,
+                message: htmlElements.chatField.value.slice(0, 512),
             }, (response: any) => {
                 if (response.success && response.response === 'success') {
                     let chatElement = <HTMLElement>document.createElement('div')
