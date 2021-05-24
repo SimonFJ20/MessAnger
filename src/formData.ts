@@ -81,7 +81,8 @@ export const formData: any = {
                 label: 'type (public/hidden/private)'
             },
             {
-                name: 'password (leave blank if public)',
+                name: 'password',
+                label: 'password (leave blank if public)',
                 type: 'password',
             }
         ],
