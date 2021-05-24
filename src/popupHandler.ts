@@ -16,8 +16,8 @@ let submit = (name: string, inputObjects: { [key: string]: HTMLInputElement; }) 
         const tempData = {
             token: sessionStorage.getItem('token'),
             name: data['name'],
-            description: data['description'] ? data['status'] : 'public',
-            status: data['status'],
+            description: data['description'],
+            status: data['status'] ? data['status'] : 'public',
             password: data['status'] === 'private' ? data['password (leave blank if public)'] : ''
         }
         data = tempData;
