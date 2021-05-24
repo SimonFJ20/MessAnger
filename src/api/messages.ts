@@ -111,7 +111,7 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
 
             if(existingRoom.status === 'private') {
                 if(existingRoom.creator !== token.user
-                && existingRoom.users.find((u: string) => u !== token.user)) {
+                && !existingRoom.users.find((u: string) => u === token.user)) {
                     res.status(400).json({success: false, response: 'denied'});
                     return;
                 }
