@@ -76,6 +76,11 @@ const setMessagsGetlist = (router: Router, database: Db, route: string) => {
     });
 }
 
+const checkIfUserInUsersArray = (users: string[], token: string) => {
+    for(let i in users) if(users[i].toString() === token.toString()) return true;
+    return false
+}
+
 const setMessagsPost = (router: Router, database: Db, route: string) => {
     router.post(route, async (req, res) => {
         try {
@@ -109,9 +114,10 @@ const setMessagsPost = (router: Router, database: Db, route: string) => {
                 return;
             }
 
+
+
             if(existingRoom.status === 'private') {
-                if(existingRoom.creator !== token.user
-                && existingRoom.users.find((u: string) => u !== token.user)) {
+                if(existingRoom.creator !== existingToken.user && !checkIfUserInUsersArray(existingRoom.users as string[], existingToken.user)) {
                     res.status(400).json({success: false, response: 'denied'});
                     return;
                 }
