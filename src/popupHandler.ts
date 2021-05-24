@@ -18,7 +18,7 @@ let submit = (name: string, inputObjects: { [key: string]: HTMLInputElement; }) 
             name: data['name'],
             description: data['description'],
             status: data['status'] ? data['status'] : 'public',
-            password: data['status'] === 'private' ? data['password (leave blank if public)'] : ''
+            password: data['status'] === 'private' ? data['password'] : ''
         }
         data = tempData;
     }
