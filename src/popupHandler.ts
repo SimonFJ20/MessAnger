@@ -12,12 +12,12 @@ let submit = (name: string, inputObjects: { [key: string]: HTMLInputElement; }) 
     }
 
     // af simon, til at fixe /rooms/create
-    if(formData[name].api === hostname) {
+    if(formData[name].api === hostname + '/api/rooms/create') {
         const tempData = {
             token: sessionStorage.getItem('token'),
             name: data['name'],
-            description: data['description'] || '',
-            status: data['status'] ? data['status'] : 'public',
+            description: data['description'] ? data['status'] : 'public',
+            status: data['status'],
             password: data['status'] === 'private' ? data['password (leave blank if public)'] : ''
         }
         data = tempData;
