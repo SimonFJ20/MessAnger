@@ -1,6 +1,7 @@
 import { post } from './ajax'
 import { htmlElements } from './dom'
 import { formData } from './formData'
+import { hostname } from './ajax'
 
 let submit = (name: string, inputObjects: { [key: string]: HTMLInputElement; }) => {
     let data: { [field: string]: any } = {
@@ -11,7 +12,7 @@ let submit = (name: string, inputObjects: { [key: string]: HTMLInputElement; }) 
     }
 
     // af simon, til at fixe /rooms/create
-    if(formData[name].api === 'https://www.simonfj20.site/api/rooms/create') {
+    if(formData[name].api === hostname) {
         const tempData = {
             token: sessionStorage.getItem('token'),
             name: data['name'],
