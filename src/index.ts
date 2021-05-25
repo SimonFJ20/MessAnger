@@ -21,8 +21,7 @@ const checkMobile = () => {
 }
 
 const start = () => {
-    if(checkMobile()) {
-        alert('you are mobile')
+    if(checkMobile() && window.location.href.match(/[^\/]*$/)![0] !== 'mobile') {
         window.location.href += '/mobile';
     }
     
